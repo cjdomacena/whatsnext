@@ -11,7 +11,7 @@ export default async function handler(
 ) {
   //
   const data = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/genre/movie/list?api_key=${process.env.MOVIE_API_KEY}&language=en-US`
+    `${process.env.TMDB_URL}/genre/movie/list?api_key=${process.env.TMDB_API_KEY}&language=en-US`
   );
   const d = await data.json();
   return res.status(200).json(d);
