@@ -6,7 +6,7 @@ type Props = {
   href: string;
 };
 
-const NavLinks: React.FC<PropsWithChildren<Props>> = ({
+const NavLink: React.FC<PropsWithChildren<Props>> = ({
   children,
   ...props
 }) => {
@@ -23,4 +23,4 @@ const NavLinks: React.FC<PropsWithChildren<Props>> = ({
   );
 };
 
-export default NavLinks;
+export default NavLink;
