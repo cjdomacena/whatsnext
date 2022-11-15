@@ -41,7 +41,7 @@ const Button: React.FC<Props> = ({
     </Link>
   ) : (
     <button
-      className={`px-6 py-3 text-sm  transition-colors rounded font-medium ${
+      className={`w-full px-6 py-3 text-sm  transition-colors rounded font-medium ${
         buttonType === "primary" ? primary : outline
       }`}
       {...props}
