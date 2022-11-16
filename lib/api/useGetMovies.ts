@@ -17,15 +17,19 @@ const queryConfig = {
   cacheTime: 15 * 60 * 1000,
 };
 
-export const useMovies = (
-  key: string,
-  type?: keyof typeof MovieQueryType | null | undefined,
-  page?: number
-): UseQueryResult<MovieSchema> => {
+export const useMovies = ({
+  key,
+  type = "popular",
+  page = 1,
+}: {
+  key: string;
+  type?: keyof typeof MovieQueryType;
+  page?: number;
+}): UseQueryResult<MovieSchema> => {
   return useQuery(
     [key],
     async () => {
-      const req = await fetch("/api/movies");
+      const req = await fetch(`/api/movies?type=${type}&page=${page}`);
       const res = await req.json();
       return res;
     },

@@ -8,7 +8,11 @@ import { useMovies } from "../../lib/api/useGetMovies";
 type Props = {};
 
 const HeroSlider: React.FC<Props> = () => {
-  const { data, isError, status } = useMovies("popular-movies", "popular", 1);
+  const { data, isError, status } = useMovies({
+    key: "popular-movie",
+    type: "popular",
+    page: 2,
+  });
   const [ref] = useKeenSlider<HTMLDivElement>({
     initial: 0,
     loop: false,
