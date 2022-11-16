@@ -10,14 +10,18 @@ import Navbar from "../components/Header/Navbar";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export default function App({
   Component,
   pageProps,
   ...appProps
 }: AppProps<{ initialSession: Session }>) {
+  // Initialize supabase client
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
-  console.log();
+
   return (
     <SessionContextProvider
       supabaseClient={supabaseClient}
@@ -27,7 +31,9 @@ export default function App({
         {appProps.router.pathname.split("/").includes("auth") ? null : (
           <Navbar />
         )}
-        <Component {...pageProps} />
+        <QueryClientProvider client={queryClient}>
+          <Component {...pageProps} />
+        </QueryClientProvider>
       </main>
     </SessionContextProvider>
   );
