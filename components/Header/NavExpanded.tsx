@@ -6,7 +6,7 @@ import NavLink from "./NavLink";
 const NavExpanded = () => {
   return (
     <NavigationMenu.Root
-      className="relative transition-all text-xs 2xl:block xl:block hidden"
+      className="relative transition-all text-xs 2xl:block xl:block hidden z-50"
       orientation="horizontal"
     >
       <NavigationMenu.List className="flex items-center gap-2">
