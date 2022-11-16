@@ -6,7 +6,7 @@ import Search from "../Inputs/Search";
 
 const Navbar = () => {
   return (
-    <header className="p-2 border-b border-b-neutral-800">
+    <header className="p-2 border-b border-b-neutral-800 shadow">
       <nav className=" mx-auto p-2 flex justify-between items-center">
         <div className="flex gap-12 items-center">
           <Link href="/">
@@ -17,7 +17,7 @@ const Navbar = () => {
           <NavExpanded />
         </div>
 
-        <div className="flex gap-4 text-neutral-300 items-center">
+        <div className=" gap-4 text-neutral-300 items-center 2xl:flex xl:flex lg:flex hidden">
           <Search />
           <button className="hover:text-neutral-100">
             <IoSunny className="w-5 h-5" />
