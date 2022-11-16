@@ -6,7 +6,10 @@ import InputField from "../../components/Inputs/InputField";
 import AuthLayout from "../../components/Layouts/AuthLayout";
 import MetaHeader from "../../lib/seo/MetaHeader";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { AuthError } from "@supabase/supabase-js";
+import {
+  AuthError,
+  SignInWithPasswordCredentials,
+} from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 import FormHeader from "../../components/Forms/FormHeader";
 
@@ -14,15 +17,21 @@ const Register: NextPage = () => {
   const supabase = useSupabaseClient();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [fullName, setFullname] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = {
+    const data: SignInWithPasswordCredentials = {
       email: email,
       password: password,
+      options: {
+        data: {
+          full_name: fullName,
+        },
+      },
     };
     setLoading(true);
     try {
@@ -56,6 +65,21 @@ const Register: NextPage = () => {
         </FormHeader>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="space-y-1 text-neutral-300">
+            <label htmlFor="fullname">
+              <span className="text-sm text-neutral-400">Full Name</span>
+            </label>
+
+            <InputField
+              type="text"
+              setter={setFullname}
+              value={fullName}
+              id="fullname"
+              placeholder="Full Name"
+              disabled={loading}
+              required
+            />
+          </div>
+          <div className="space-y-1 text-neutral-300">
             <label htmlFor="email">
               <span className="text-sm text-neutral-400">Email</span>
             </label>
@@ -70,6 +94,7 @@ const Register: NextPage = () => {
               required
             />
           </div>
+
           <div className="space-y-1 text-neutral-300 relative">
             <label htmlFor="password">
               <span className="text-sm text-neutral-400">Create Password</span>
