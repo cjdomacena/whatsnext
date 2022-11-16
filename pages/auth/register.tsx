@@ -99,7 +99,7 @@ const Register: NextPage = () => {
               ) : null}
             </button>
             <button
-              className="py-3 text-sm w-full text-neutral-400 font-medium bg-neutral-800 rounded hover:bg-neutral-700 transition-colors disabled:bg-neutral-700"
+              className="py-3 text-sm w-full text-neutral-400 font-medium bg-neutral-900 rounded hover:bg-neutral-800 transition-colors disabled:bg-neutral-800"
               type="button"
               disabled={loading}
               onClick={() => router.push("/")}

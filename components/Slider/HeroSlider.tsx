@@ -1,14 +1,15 @@
 import React from "react";
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
-import Image from "next/image";
 import Slide, { SlideLoading } from "./Slide";
-import { useQuery } from "@tanstack/react-query";
-import { useMovies } from "../../lib/api/useGetMovies";
-type Props = {};
+import { useGetTrending } from "../../lib/api/useGetTrending";
 
-const HeroSlider: React.FC<Props> = () => {
-  const { data, isError, status } = useMovies("popular-movies", "popular", 1);
+const HeroSlider: React.FC = () => {
+  const { data, isError, status, error } = useGetTrending({
+    key: ["trending", "day", "all"],
+    time_window: "day",
+    media_type: "all",
+  });
   const [ref] = useKeenSlider<HTMLDivElement>({
     initial: 0,
     loop: false,
@@ -20,7 +21,7 @@ const HeroSlider: React.FC<Props> = () => {
       },
       // 1000px and up
       "(min-width: 1000px)": {
-        slides: { perView: 2, spacing: 5 },
+        slides: { perView: 3, spacing: 5 },
       },
     },
     // Default behaviour
@@ -31,12 +32,13 @@ const HeroSlider: React.FC<Props> = () => {
   });
 
   if (isError) {
-    return <h1>Ooops.... Something went wrong.</h1>;
+    return <h1>{}</h1>;
   }
+
   if (status === "success") {
     return (
       <div className="overflow-x-hidden">
-        <div className="my-8 relative rounded">
+        <div className="my-4 relative  px-2">
           <div ref={ref} className="keen-slider h-auto gap-1 ">
             {data && data.results
               ? data.results.map((movie, index: number) =>

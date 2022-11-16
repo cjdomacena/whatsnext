@@ -3,9 +3,10 @@ import {
   UseQueryResult,
   UseQueryOptions,
 } from "@tanstack/react-query";
+import { MediaType, TimeWindow } from "../../pages/api/trending";
 import { MovieSchema } from "../constants/types";
 
-export enum MovieQueryType {
+enum MovieQueryType {
   "top_rated",
   "popular",
   "upcoming",
@@ -15,22 +16,28 @@ const queryConfig = {
   refetchOnWindowFocus: false,
   staleTime: 15 * 60 * 1000, // 15 minutes
   cacheTime: 15 * 60 * 1000,
+  retry: 1,
 };
 
-export const useGetMovies = ({
+export const useGetTrending = ({
   key,
-  type = "popular",
-  page = 1,
+  time_window = "week",
+  media_type = "all",
 }: {
   key: string[];
-  type?: keyof typeof MovieQueryType;
-  page?: number;
+  time_window?: keyof typeof TimeWindow;
+  media_type?: keyof typeof MediaType;
 }): UseQueryResult<MovieSchema, Error> => {
   return useQuery(
-    [key],
+    key,
     async () => {
-      const req = await fetch(`/api/movies?type=${type}&page=${page}`);
+      const req = await fetch(
+        `/api/trending?time_window=${time_window}&media_type=${media_type}`
+      );
       const res = await req.json();
+      if (res.hasOwnProperty("error")) {
+        throw new Error(res.error);
+      }
       return res;
     },
     { ...queryConfig }
