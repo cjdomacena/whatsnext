@@ -31,7 +31,7 @@ const InputField: React.FC<Props> = ({
         bg-neutral-900/5 ring-1 ring-white/10  rounded p-3 w-full placeholder:text-neutral-500 
         focus:ring-amber-900/50
         disabled:bg-neutral-800
-         autofill:bg-neutral-800
+         autofill:bg-neutral-900
         `}
         id={id}
         value={value}
