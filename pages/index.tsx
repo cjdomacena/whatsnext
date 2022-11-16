@@ -18,13 +18,13 @@ export default function Home() {
       {/* TODO: Look for a way to make it dynamic */}
       <section className="mx-4 my-4 space-y-4 text-neutral-200">
         <div>
-          <h2 className="font-bold">Popular Movies</h2>
+          <h2 className="font-semibold uppercase ">Popular Movies</h2>
           <PopularMovies />
         </div>
       </section>
       <section className="mx-4 my-4 space-y-4 text-neutral-200">
         <div>
-          <h2 className="font-bold">Trending Movies</h2>
+          <h2 className="font-semibold uppercase ">Trending Movies</h2>
           <TrendingMovies />
         </div>
       </section>
