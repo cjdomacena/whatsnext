@@ -10,9 +10,12 @@ const SlideImage: React.FC<Props> = ({ width, path }) => {
     <Image
       src={`https://image.tmdb.org/t/p/w${width}${path}`}
       alt=""
-      className="rounded-lg group-hover:scale-125 transition-transform w-full object-fill"
+      className="rounded-lg transition-transform w-full object-cover object-center"
       loading="lazy"
       fill
+      sizes="(max-width: 768px) 100vw,
+              (max-width: 1200px) 50vw,
+              33vw"
     />
   );
 };
