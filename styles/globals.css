@@ -3,9 +3,11 @@
 @tailwind utilities;
 
 body {
-  background-color: #000;
+  background-color: #0c0d0c;
+
   @apply text-neutral-100;
   font-family: "Montserrat", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* https://www.radix-ui.com/docs/primitives/components/navigation-menu */

@@ -27,7 +27,7 @@ export default function App({
       supabaseClient={supabaseClient}
       initialSession={pageProps.initialSession}
     >
-      <main>
+      <main className="">
         {appProps.router.pathname.split("/").includes("auth") ? null : (
           <Navbar />
         )}

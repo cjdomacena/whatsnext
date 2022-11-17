@@ -33,7 +33,7 @@ const Slide: React.FC<Props> = ({ width, path, result }) => {
         <h2 className="text-2xl font-black">{result.title}</h2>
         <p className=" line-clamp-2 text-xs">{result.overview}</p>
       </div>
-      <div className="w-full h-full bg-black z-10 absolute top-0 left-0 opacity-40 group-hover:opacity-10 transition-opacity rounded"></div>
+      <div className="w-full h-full bg-black z-10 absolute top-0 left-0 opacity-50 group-hover:opacity-10 transition-opacity rounded"></div>
     </div>
   );
 };
