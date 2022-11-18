@@ -1,10 +1,11 @@
 import React from "react";
 import Image from "next/image";
-import { MovieResult } from "../../lib/constants/types";
+import { MovieInterface } from "../../lib/types";
+
 type Props = {
   width: number;
   path: string;
-  result: MovieResult;
+  result: MovieInterface;
 };
 
 const formatDate = (date: string) => {

@@ -1,11 +1,12 @@
 import React from "react";
 import { useKeenSlider } from "keen-slider/react";
-import { MovieResult } from "../../lib/constants/types";
 import SlideImage from "./SlideImage";
 import { GiPopcorn } from "react-icons/gi";
+import { MovieInterface } from "../../lib/types";
+import { getUserScoreTemp } from "../../lib/util";
 
 type CarouselProps = {
-  data: MovieResult[];
+  data: MovieInterface[];
 };
 
 const Carousel: React.FC<CarouselProps> = ({ data }) => {
@@ -16,13 +17,16 @@ const Carousel: React.FC<CarouselProps> = ({ data }) => {
     breakpoints: {
       // 400px and up
       "(min-width: 400px)": {
-        slides: { perView: 2, spacing: 15 },
+        slides: { perView: 1, spacing: 15 },
       },
       "(min-width: 600px)": {
         slides: { perView: 3, spacing: 5 },
       },
       // 1000px and up
       "(min-width: 1000px)": {
+        slides: { perView: 4, spacing: 15 },
+      },
+      "(min-width: 1280px)": {
         slides: { perView: 6, spacing: 15 },
       },
     },
@@ -50,14 +54,14 @@ const Carousel: React.FC<CarouselProps> = ({ data }) => {
   );
 };
 
-const CarouselSlide: React.FC<{ movie: MovieResult }> = ({ movie }) => {
-  const getColor = (vote: number) => {
-    if (vote < 6) {
-      return "outline-orange-500";
-    } else if (vote >= 6 && vote < 8) {
-      return "outline-yellow-500";
-    } else {
-      return "outline-green-500";
+const CarouselSlide: React.FC<{ movie: MovieInterface }> = ({ movie }) => {
+  const textColor = (vote: number) => {
+    if (vote < 5) {
+      return "text-orange-500";
+    } else if (vote >= 5 && vote < 7.5) {
+      return "text-yellow-500";
+    } else if (vote >= 7.5) {
+      return "text-green-500";
     }
   };
   return (
@@ -69,14 +73,14 @@ const CarouselSlide: React.FC<{ movie: MovieResult }> = ({ movie }) => {
       <SlideImage path={movie.poster_path ?? ""} width={342} />
       <div className="w-full p-4 bg-black/60 absolute left-0 -bottom-0 backdrop-blur-sm flex items-center gap-2">
         <div
-          className={`outline outline-2 ${getColor(
+          className={`${textColor(
             movie.vote_average
-          )} rounded-full w-9 h-9 grid place-items-center relative `}
+          )} text-center relative self-center mt-2`}
         >
-          <p className="text-xs after:content-['%']  z-40 font-bold">
+          <GiPopcorn className={` w-8 h-8 `} />
+          <p className="text-sm after:content-['%']  z-40 font-bold">
             {Math.ceil(movie.vote_average * 10)}
           </p>
-          <GiPopcorn className="text-neutral-500 absolute w-6 h-6 z-10" />
         </div>
         <div className="text-sm w-3/4">
           <h3 className="font-semibold truncate text-lg">{movie.title}</h3>
