@@ -15,6 +15,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import MetaHeader from "../lib/seo/MetaHeader";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export default function App({
   Component,
@@ -26,17 +28,24 @@ export default function App({
 }>) {
   // Initialize supabase client
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {},
+      })
+  );
   return (
     <SessionContextProvider
       supabaseClient={supabaseClient}
       initialSession={pageProps.initialSession}
     >
+      <MetaHeader title="What's Next" description="Awesome!!!" />
       <main className="">
         {appProps.router.pathname.split("/").includes("auth") ? null : (
           <Navbar />
         )}
         <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={true} />
           <Hydrate state={pageProps.dehydratedState}>
             <Component {...pageProps} />
           </Hydrate>

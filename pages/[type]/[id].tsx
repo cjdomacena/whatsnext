@@ -1,24 +1,13 @@
-import {
-  dehydrate,
-  QueryClient,
-  useQuery,
-  UseQueryResult,
-} from "@tanstack/react-query";
-import {
-  GetServerSideProps,
-  InferGetServerSidePropsType,
-  NextPage,
-} from "next";
+import { Suspense } from "react";
+import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import MetaHeader from "../../lib/seo/MetaHeader";
-import {
-  ExtractedResult,
-  MediaType,
-  MovieInterface,
-  TVInterface,
-} from "../../lib/types";
+import { ExtractedResult, MovieInterface, TVInterface } from "../../lib/types";
 import { getYear } from "../../lib/util";
-
+import MovieLayout from "../../components/Layouts/MovieLayout";
+import { MOVIE } from "../../lib/constants/testData";
+import Image from "next/image";
 const getDetail = async (
   type: string | string[] | undefined,
   id: number | string | undefined | string[]
@@ -71,48 +60,82 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const DetailPage = (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
-  const router = useRouter();
-  const {
-    data: details,
-    status,
-    error,
-  } = useQuery<ExtractedResult<TVInterface & MovieInterface>, Error>(
-    [router.query.type, router.query.id],
-    () => getDetail(router.query.type, router.query.id),
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      retry: 1,
-      enabled: router.isReady,
-      staleTime: 5000,
-    }
+  // const router = useRouter();
+  // const {
+  //   data: details,
+  //   status,
+  //   error,
+  // } = useQuery<ExtractedResult<TVInterface & MovieInterface>, Error>(
+  //   [router.query.type, router.query.id],
+  //   () => getDetail(router.query.type, router.query.id),
+  //   {
+  //     refetchOnMount: false,
+  //     refetchOnWindowFocus: false,
+  //     retry: 1,
+  //     enabled: false,
+  //     staleTime: 5000,
+  //   }
+  // );
+
+  // if (error) {
+  //   throw error;
+  // }
+  const details = MOVIE;
+  return (
+    <div>
+      <MetaHeader
+        title={`${details?.name} (${getYear(
+          details?.first_air_date
+        )}) — WhatsNext: Platform for the lazy`}
+        description="Your No. 1 source of movies"
+      />
+      <MovieLayout>
+        <div className="overflow-hidden absolute left-0 top-0">
+          <div className="w-screen h-[500px] ">
+            <Image
+              src="https://image.tmdb.org/t/p/w300/xHkOKPUe3ioXyPIe5odyL6o6cp4.jpg"
+              fill
+              alt=""
+              sizes="(max-width: 768px) 100vw,
+            (max-width: 1200px) 50vw,
+            33vw"
+              className="blur-[500px]"
+            />
+          </div>
+        </div>
+
+        <h1 className="text-6xl font-bold">{details.name}</h1>
+      </MovieLayout>
+    </div>
   );
 
-  if (error) {
-    throw error;
-  }
-
-  switch (status) {
-    case "success": {
-      const title = `${details.title ?? details.name} (${getYear(
-        details.first_air_date ?? details.release_date
-      )}) — WhatsNext: Platform for the lazy`;
-      return (
-        <div>
-          <MetaHeader title={title} description="Your No. 1 source of movies" />
-          <h1>{details.title ?? details.name}</h1>
-        </div>
-      );
-    }
-    case "loading": {
-      return (
-        <div>
-          <MetaHeader title={"What's Next"} description={"Something"} />
-          <h1>Loading...</h1>
-        </div>
-      );
-    }
-  }
+  // return (
+  //   <div>
+  //     <Suspense
+  //       fallback={
+  //         <div className="text-white">
+  //           <h1>Loading...</h1>
+  //         </div>
+  //       }
+  //     >
+  //       {details ? (
+  //         <div>
+  //           <MetaHeader
+  //             title={`${details?.title ?? details?.name} (${getYear(
+  //               details?.first_air_date ?? details?.release_date
+  //             )}) — WhatsNext: Platform for the lazy`}
+  //             description="Your No. 1 source of movies"
+  //           />
+  //           <MovieLayout>
+  //             <h1 className="text-6xl font-bold">
+  //               {details.title ?? details.name}
+  //             </h1>
+  //           </MovieLayout>
+  //         </div>
+  //       ) : null}
+  //     </Suspense>
+  //   </div>
+  // );
 };
 
 export default DetailPage;

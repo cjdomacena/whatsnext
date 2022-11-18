@@ -43,7 +43,7 @@ export default function Home() {
         <div>
           <div className="mx-auto  p-4 rounded relative">
             <h3 className=" text-6xl uppercase font-bold whitespace-wrap break-words shadow -tracking-wider">
-              Trending Movies
+              Trending TV
             </h3>
           </div>
           <TrendingMovies />

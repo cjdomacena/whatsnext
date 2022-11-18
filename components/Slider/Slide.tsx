@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import { MovieInterface, TVInterface } from "../../lib/types";
 import Link from "next/link";
-import { IoArrowForwardSharp, IoCaretForwardSharp } from "react-icons/io5";
 
 type Props = {
   width: number;
@@ -21,7 +20,7 @@ const formatDate = (date: string) => {
 const Slide: React.FC<Props> = ({ width, path, result }) => {
   const getUrlPath = (title: string, id: string) => {
     const path = `${title}-${id}`;
-    const t = path.split("-");
+    const t = path.split(/[.:-]/);
     return `${String(t[0].split(" ").join("-").toLowerCase())}-${
       t[t.length - 1]
     }`;
@@ -39,12 +38,19 @@ const Slide: React.FC<Props> = ({ width, path, result }) => {
         className="rounded-lg group-hover:scale-125 transition-transform object-cover"
         loading="eager"
         fill
-        sizes="(max-width: 768px) 100vw,
+        sizes="(max-width: 768px) 50vw,
               (max-width: 1200px) 50vw,
-              33vw"
+             100vw"
       />
-      <div className="absolute bottom-6 left-8 z-40 text-white w-80 space-y-2">
-        <h2 className="text-2xl font-black">{result.title ?? result.name}</h2>
+      <div className="absolute bottom-6 left-8 z-40 text-white w-[400px] space-y-2">
+        <h2
+          className="text-2xl font-black gap-1 line-clamp-1"
+          title={result.name ?? result.title}
+        >
+          {result.title ?? result.name}
+        </h2>
+        <p className="text-xs uppercase">{result.media_type}</p>
+
         <p className=" line-clamp-2 text-xs">{result.overview}</p>
         <Link
           href={`${result.media_type}/${getUrlPath(

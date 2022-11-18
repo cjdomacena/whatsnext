@@ -10,7 +10,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { query } = req;
-  console.log(query.id);
   try {
     if (query.hasOwnProperty("type") && query.hasOwnProperty("id")) {
       const id = (query.id as string).split("-");

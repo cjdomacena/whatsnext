@@ -5,9 +5,9 @@ import DefaultLoader from "./DefaultLoader";
 
 const TrendingMovies: React.FC = () => {
   const { data, isError, error, status } = useGetTrending({
-    key: ["trending", "movie", "week"],
+    key: ["trending", "tv", "week"],
     time_window: "week",
-    media_type: "movie",
+    media_type: "tv",
   });
   if (isError) {
     return <h1>{error.message}</h1>;

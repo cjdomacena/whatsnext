@@ -2,11 +2,11 @@ import React from "react";
 import { useKeenSlider } from "keen-slider/react";
 import SlideImage from "./SlideImage";
 import { GiPopcorn } from "react-icons/gi";
-import { MovieInterface } from "../../lib/types";
+import { MovieInterface, TVInterface } from "../../lib/types";
 import { getUserScoreTemp } from "../../lib/util";
 
 type CarouselProps = {
-  data: MovieInterface[];
+  data: MovieInterface[] | TVInterface[];
 };
 
 const Carousel: React.FC<CarouselProps> = ({ data }) => {
@@ -54,7 +54,9 @@ const Carousel: React.FC<CarouselProps> = ({ data }) => {
   );
 };
 
-const CarouselSlide: React.FC<{ movie: MovieInterface }> = ({ movie }) => {
+const CarouselSlide: React.FC<{ movie: MovieInterface | TVInterface }> = ({
+  movie,
+}) => {
   const textColor = (vote: number) => {
     if (vote < 5) {
       return "text-orange-500";
@@ -83,7 +85,10 @@ const CarouselSlide: React.FC<{ movie: MovieInterface }> = ({ movie }) => {
           </p>
         </div>
         <div className="text-sm w-3/4">
-          <h3 className="font-semibold truncate text-lg">{movie.title}</h3>
+          <h3 className="font-semibold truncate text-lg">
+            {/* @ts-ignore */}
+            {movie.title ?? movie.name}
+          </h3>
           <p className=" line-clamp-2 text-xs">{movie.overview}</p>
         </div>
       </div>
