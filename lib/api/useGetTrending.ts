@@ -1,10 +1,6 @@
-import {
-  useQuery,
-  UseQueryResult,
-  UseQueryOptions,
-} from "@tanstack/react-query";
-import { MediaType, TimeWindow } from "../../pages/api/trending";
-import { MovieSchema } from "../constants/types";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { TimeWindow } from "../../pages/api/trending";
+import { MediaType, MovieSchema } from "../types";
 
 enum MovieQueryType {
   "top_rated",
@@ -18,16 +14,15 @@ const queryConfig = {
   cacheTime: 15 * 60 * 1000,
   retry: 1,
 };
-
-export const useGetTrending = ({
+export const useGetTrending = <T extends keyof typeof MediaType | undefined>({
   key,
   time_window = "week",
   media_type = "all",
 }: {
   key: string[];
   time_window?: keyof typeof TimeWindow;
-  media_type?: keyof typeof MediaType;
-}): UseQueryResult<MovieSchema, Error> => {
+  media_type?: T;
+}): UseQueryResult<MovieSchema<T>, Error> => {
   return useQuery(
     key,
     async () => {
