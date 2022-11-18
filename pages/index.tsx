@@ -12,9 +12,9 @@ export default function Home() {
         title="What's Next"
         description="Not sure what to watch next? "
       />
-      <div className="my-4 w-full p-4">
+      <div className="my-4 w-full p-4 ">
         <div className="container mx-auto  p-4 rounded relative">
-          <h1 className=" text-9xl uppercase -tracking-wider font-bold whitespace-wrap break-words shadow bg-gradient-to-r from-amber-500 to-pink-500 bg-clip-text text-transparent">
+          <h1 className=" uppercase -tracking-wider font-bold whitespace-wrap break-words bg-gradient-to-r from-amber-500 to-pink-500 bg-clip-text text-transparent 2xl:text-9xl  xl:text-9xl  lg:text-9xl  md:text-9xl  text-8xl ">
             Life is too short for ordinary apps
           </h1>
         </div>
