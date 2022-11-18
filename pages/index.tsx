@@ -5,6 +5,12 @@ import Carousel from "../components/Slider/Carousel";
 import PopularMovies from "../components/Slider/PopularMovies";
 import TrendingMovies from "../components/Slider/TrendingMovies";
 
+export const getServerSideProps = () => {
+  return {
+    props: {},
+  };
+};
+
 export default function Home() {
   return (
     <div>

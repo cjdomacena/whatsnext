@@ -9,11 +9,9 @@ const Navbar = () => {
     <header className="p-2 border-b border-b-neutral-800 shadow">
       <nav className=" mx-auto p-2 flex justify-between items-center">
         <div className="flex gap-12 items-center">
-          <Link href="/">
-            <h4 className="text-xl uppercase tracking-wider font-black text-white ">
-              WhatsNext
-            </h4>
-          </Link>
+          <h4 className="text-xl uppercase tracking-wider font-black text-white ">
+            <Link href="/">WhatsNext</Link>
+          </h4>
           <NavExpanded />
         </div>
 
