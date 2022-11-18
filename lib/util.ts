@@ -6,6 +6,12 @@ export const formatDate = (date: string) => {
   }).format(new Date(date));
 };
 
+export const getYear = (date: string) => {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+  }).format(new Date(date));
+};
+
 export const getUserScoreTemp = (vote: number) => {
   if (vote < 5) {
     return "text-orange-500";
