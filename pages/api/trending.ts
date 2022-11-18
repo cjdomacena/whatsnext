@@ -5,12 +5,6 @@ export enum TimeWindow {
   "day",
   "week",
 }
-export enum MediaType {
-  "all",
-  "tv",
-  "movie",
-  "person",
-}
 
 export default async function handler(
   req: NextApiRequest,
