@@ -8,6 +8,7 @@ import Image from "next/image";
 import { IoArrowBackOutline } from "react-icons/io5";
 import Link from "next/link";
 import { Intersect, MovieDetails } from "../../lib/types/movies";
+import * as Tabs from "@radix-ui/react-tabs";
 const getDetail = async (
   type: string | string[] | undefined,
   id: number | string | undefined | string[]
@@ -85,7 +86,6 @@ const DetailPage = (
   if (error) {
     throw error;
   }
-
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
@@ -97,39 +97,11 @@ const DetailPage = (
               } — WhatsNext: Platform for the lazy`}
               description="Your No. 1 source of movies"
             />
-            <div
-              className={`w-full min-h-[600px] bg-cover bg-no-repeat bg-center  relative z-10 grid place-items-center`}
-              style={{
-                backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${details.backdrop_path})`,
-              }}
-            >
-              <div className="absolute w-full h-full top-0 left-0 z-20 bg-neutral-900/80 backdrop-blur"></div>
-              <div className="container mx-auto z-30 ">
-                <div className="w-fit mx-auto rounded space-y-8 text-center">
-                  <div>
-                    <h1 className="text-8xl font-black">
-                      {details.name ?? details.title}
-                    </h1>
-                    <p className="text-2xl">{details?.tagline ?? null}</p>
-                  </div>
-                  <ul className="flex gap-4 text-xs justify-center">
-                    {details?.genres?.map(
-                      (genre: { id: number; name: string }) => (
-                        <li
-                          key={genre.id}
-                          className=" text-neutral-300 px-6 py-2 rounded font-bold"
-                        >
-                          {genre.name}
-                        </li>
-                      )
-                    )}
-                  </ul>
-                </div>
-              </div>
-            </div>
+            <TitleHeader {...details} />
+
             <MovieLayout>
               <div className=" flex 2xl:flex-nowrap xl:flex-nowrap lg:flex-nowrap flex-wrap">
-                <div className="min-w-[300px] mt-10 text-neutral-400">
+                <div className="min-w-[300px] mt-0 text-neutral-400">
                   <Link href="/">
                     <p className="flex items-center gap-4 group w-fit ">
                       <IoArrowBackOutline className="group-hover:-translate-x-4 transition-transform" />
@@ -138,19 +110,86 @@ const DetailPage = (
                   </Link>
                 </div>
                 <div>
-                  <h2 className="text-6xl font-black 2xl:leading-loose xl:leading-loose lg:leading-loose leading-relaxed break-words">
-                    Overview
-                    {/* {details.name ?? details.title} */}
-                  </h2>
-                  <p className="text-2xl font-extralight leading-loose text-neutral-300">
-                    {details.overview}
-                  </p>
+                  <div>
+                    <Tabs.Root defaultValue="overview" orientation="horizontal">
+                      <Tabs.List>
+                        <Tabs.Trigger
+                          value="overview"
+                          className=" data-[state='active']:bg-amber-500 data-[state='inactive']:bg-transparent p-2 rounded transition-colors"
+                        >
+                          Overview
+                        </Tabs.Trigger>
+                        <Tabs.Trigger
+                          value="cast"
+                          className=" p-2 rounded data-[state='active']:bg-amber-500 data-[state='inactive']:bg-transparent transition-colors"
+                        >
+                          Casts
+                        </Tabs.Trigger>
+                      </Tabs.List>
+                      <Tabs.Content value="overview">
+                        <div className=" min-h-[400px]">
+                          <h2 className="text-6xl font-black 2xl:leading-loose xl:leading-loose lg:leading-loose leading-relaxed break-words">
+                            Overview
+                            {/* {details.name ?? details.title} */}
+                          </h2>
+                          <p className="text-2xl font-extralight leading-loose text-neutral-300">
+                            {details.overview}
+                          </p>
+                        </div>
+                      </Tabs.Content>
+                      <Tabs.Content value="cast">
+                        <div className=" min-h-[400px]">
+                          <h2 className="text-6xl font-black 2xl:leading-loose xl:leading-loose lg:leading-loose leading-relaxed break-words">
+                            Casts
+                          </h2>
+                        </div>
+                      </Tabs.Content>
+                    </Tabs.Root>
+                  </div>
                 </div>
               </div>
             </MovieLayout>
           </>
         ) : null}
       </Suspense>
+    </div>
+  );
+};
+enum Tx {
+  "tv",
+  "movie",
+}
+const TitleHeader: React.FC<Intersect<"movie"> & Intersect<"tv">> = (
+  details
+) => {
+  return (
+    <div
+      className={`w-full min-h-[600px] bg-cover bg-no-repeat bg-center  relative z-10 grid place-items-center`}
+      style={{
+        backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${details.backdrop_path})`,
+      }}
+    >
+      <div className="absolute w-full h-full top-0 left-0 z-20 bg-neutral-900/80 backdrop-blur"></div>
+      <div className="container mx-auto z-30 ">
+        <div className="w-fit mx-auto rounded space-y-8 text-center">
+          <div>
+            <h1 className="text-8xl font-black">
+              {details.name ?? details.title}
+            </h1>
+            <p className="text-2xl">{details?.tagline ?? null}</p>
+          </div>
+          <ul className="flex gap-4 text-xs justify-center">
+            {details?.genres?.map((genre: { id: number; name: string }) => (
+              <li
+                key={genre.id}
+                className=" text-neutral-300 px-6 py-2 rounded font-bold"
+              >
+                {genre.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 };
