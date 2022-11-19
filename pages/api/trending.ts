@@ -1,15 +1,8 @@
-import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export enum TimeWindow {
   "day",
   "week",
-}
-export enum MediaType {
-  "all",
-  "tv",
-  "movie",
-  "person",
 }
 
 export default async function handler(

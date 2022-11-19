@@ -3,6 +3,7 @@ import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
 import Slide, { SlideLoading } from "./Slide";
 import { useGetTrending } from "../../lib/api/useGetTrending";
+import { ExtractedResult, MovieInterface, MovieSchema } from "../../lib/types";
 
 const HeroSlider: React.FC = () => {
   const { data, isError, status, error } = useGetTrending({
@@ -10,6 +11,41 @@ const HeroSlider: React.FC = () => {
     time_window: "day",
     media_type: "all",
   });
+
+  if (isError) {
+    return <h1>{}</h1>;
+  }
+  switch (status) {
+    case "loading": {
+      return (
+        <div className="overflow-x-hidden">
+          <div className="my-8 px-2 relative rounded">
+            <div className="flex gap-4">
+              <SlideLoading />
+              <SlideLoading />
+              <SlideLoading />
+            </div>
+          </div>
+        </div>
+      );
+    }
+    case "success": {
+      return (
+        <div className="overflow-x-hidden">
+          <div className="my-4 relative  px-2">
+            <Slider data={data} />
+          </div>
+        </div>
+      );
+    }
+  }
+};
+
+const Slider = ({
+  data,
+}: {
+  data: (MovieSchema<"tv"> & MovieSchema<"movie">) | undefined;
+}) => {
   const [ref] = useKeenSlider<HTMLDivElement>({
     initial: 0,
     loop: false,
@@ -30,57 +66,20 @@ const HeroSlider: React.FC = () => {
       spacing: 15,
     },
   });
-
-  if (isError) {
-    return <h1>{}</h1>;
-  }
-
-  if (status === "success") {
-    return (
-      <div className="overflow-x-hidden">
-        <div className="my-4 relative  px-2">
-          <div ref={ref} className="keen-slider h-auto gap-1 ">
-            {data && data.results
-              ? data.results.map((movie, index: number) =>
-                  index < 6 ? (
-                    <Slide
-                      width={1280}
-                      path={movie.backdrop_path ?? ""}
-                      key={movie.id}
-                      result={movie}
-                    />
-                  ) : null
-                )
-              : null}
-          </div>
-        </div>
-      </div>
-    );
-  } else if (status === "loading") {
-    return (
-      <div className="overflow-x-hidden">
-        <div className="my-8 px-2 relative rounded">
-          <div className="flex gap-4">
-            <SlideLoading />
-            <SlideLoading />
-            <SlideLoading />
-          </div>
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className=" overflow-x-hidden">
-        <div className="my-8 px-2 relative rounded">
-          <div className="flex gap-4">
-            <SlideLoading />
-            <SlideLoading />
-            <SlideLoading />
-          </div>
-        </div>
-      </div>
-    );
-  }
+  return (
+    <div ref={ref} className="keen-slider h-auto gap-1 ">
+      {data && data.results
+        ? data.results.map((movie, index: number) => (
+            <Slide
+              width={1280}
+              path={movie.backdrop_path ?? ""}
+              key={movie.id}
+              result={movie}
+            />
+          ))
+        : null}
+    </div>
+  );
 };
 
 export default HeroSlider;

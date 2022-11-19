@@ -1,9 +1,5 @@
-import {
-  useQuery,
-  UseQueryResult,
-  UseQueryOptions,
-} from "@tanstack/react-query";
-import { MovieSchema } from "../constants/types";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { MovieSchema } from "../types";
 
 export enum MovieQueryType {
   "top_rated",
@@ -25,12 +21,15 @@ export const useGetMovies = ({
   key: string[];
   type?: keyof typeof MovieQueryType;
   page?: number;
-}): UseQueryResult<MovieSchema, Error> => {
+}): UseQueryResult<MovieSchema<"movie">, Error> => {
   return useQuery(
     [key],
     async () => {
       const req = await fetch(`/api/movies?type=${type}&page=${page}`);
       const res = await req.json();
+      if (res.hasOwnProperty("error")) {
+        throw new Error(res.error);
+      }
       return res;
     },
     { ...queryConfig }

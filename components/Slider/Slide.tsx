@@ -1,10 +1,12 @@
 import React from "react";
 import Image from "next/image";
-import { MovieResult } from "../../lib/constants/types";
+import { ExtractedResult, MovieInterface, TVInterface } from "../../lib/types";
+import Link from "next/link";
+
 type Props = {
   width: number;
   path: string;
-  result: MovieResult;
+  result: any; // I give up
 };
 
 const formatDate = (date: string) => {
@@ -16,6 +18,14 @@ const formatDate = (date: string) => {
 };
 
 const Slide: React.FC<Props> = ({ width, path, result }) => {
+  const getUrlPath = (title: string, id: string) => {
+    const path = `${title}-${id}`;
+    const t = path.split(/[.:-]/);
+    return `${String(t[0].split(" ").join("-").toLowerCase())}-${
+      t[t.length - 1]
+    }`;
+  };
+
   return (
     <div
       className="keen-slider__slide cursor-pointer relative rounded-lg
@@ -28,10 +38,25 @@ const Slide: React.FC<Props> = ({ width, path, result }) => {
         className="rounded-lg group-hover:scale-125 transition-transform object-cover"
         loading="eager"
         fill
+        sizes="(max-width: 768px) 50vw,
+              (max-width: 1200px) 50vw,
+             100vw"
       />
-      <div className="absolute bottom-6 left-8 z-40 text-white w-80 space-y-2">
-        <h2 className="text-2xl font-black">{result.title}</h2>
+      <div className="absolute bottom-6 left-8 z-40 text-white w-[400px] space-y-2">
+        <h2
+          className="text-2xl font-black gap-1 line-clamp-1"
+          title={result.name ?? result.title}
+        >
+          {result.title ?? result.name}
+        </h2>
+        <p className="text-xs uppercase">{result.media_type}</p>
+
         <p className=" line-clamp-2 text-xs">{result.overview}</p>
+        <Link href={`${result.media_type}/${result.id}`}>
+          <p className="text-xs text-amber-500 font-bold mt-2 flex gap-2 items-center group bg-amber-900/50 w-fit rounded px-2 py-2 hover:bg-amber-900/90 transition-opacity">
+            View Details
+          </p>
+        </Link>
       </div>
       <div className="w-full h-full bg-black z-10 absolute top-0 left-0 opacity-50 group-hover:opacity-10 transition-opacity rounded"></div>
     </div>
