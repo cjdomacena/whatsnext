@@ -25,9 +25,8 @@ export const useGetMovies = ({
   return useQuery(
     [key],
     async () => {
-      const req = await fetch(
-        `${process.env.VERCEL_URL}/api/movies?type=${type}&page=${page}`
-      );
+      const url = `/api/movies?type=${type}&page=${page}`;
+      const req = await fetch(url);
       const res = await req.json();
       if (res.hasOwnProperty("error")) {
         throw new Error(res.error);
