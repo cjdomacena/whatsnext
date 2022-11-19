@@ -13,7 +13,8 @@ const getDetail = async (
   id: number | string | undefined | string[]
 ) => {
   try {
-    const req = await fetch(`http://localhost:3000/api/${type}/${id}`);
+    const url = `/api/${type}/${id}`;
+    const req = await fetch(url);
     const res = await req.json();
     if (res.hasOwnProperty("error")) {
       throw new Error(res.error);
@@ -154,10 +155,7 @@ const DetailPage = (
     </div>
   );
 };
-enum Tx {
-  "tv",
-  "movie",
-}
+
 const TitleHeader: React.FC<Intersect<"movie"> & Intersect<"tv">> = (
   details
 ) => {

@@ -16,7 +16,7 @@ const PopularMovies: React.FC = () => {
       return <DefaultLoader />;
     }
     case "success": {
-      return <Carousel data={data.results} />;
+      return <Carousel data={data.results} type="movie" />;
     }
   }
 };

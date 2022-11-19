@@ -26,9 +26,8 @@ export const useGetTrending = <T extends keyof typeof MediaType | undefined>({
   return useQuery(
     key,
     async () => {
-      const req = await fetch(
-        `/api/trending?time_window=${time_window}&media_type=${media_type}`
-      );
+      const url = `/api/trending?time_window=${time_window}&media_type=${media_type}`;
+      const req = await fetch(url);
       const res = await req.json();
       if (res.hasOwnProperty("error")) {
         throw new Error(res.error);

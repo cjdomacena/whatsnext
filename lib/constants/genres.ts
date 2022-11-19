@@ -38,3 +38,5 @@ export const TV_GENRES = [
   { id: 10768, name: "War & Politics" },
   { id: 37, name: "Western" },
 ];
+
+export const ALL_GENRES = [...TV_GENRES, ...MOVIE_GENRES];
