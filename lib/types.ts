@@ -1,5 +1,3 @@
-import { type } from "os";
-
 interface IBasicImage {
   aspect_ratio: number;
   file_path: string;
@@ -56,15 +54,12 @@ export interface ResultWithDates {
   minimum: string;
 }
 
-export interface MovieSchema<T> {
+export interface MovieSchema<T extends keyof typeof MediaType> {
   page: number;
   results: ExtractedResult<T>[];
   total_results?: number;
   total_pages?: number;
 }
 
-export type ExtractedResult<T> = T extends "movie"
-  ? MovieInterface
-  : T extends "tv"
-  ? TVInterface
-  : MovieInterface & TVInterface;
+export type ExtractedResult<T extends keyof typeof MediaType> =
+  T extends "movie" ? MovieInterface : T extends "tv" ? TVInterface : never;

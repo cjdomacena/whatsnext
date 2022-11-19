@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { TimeWindow } from "../../pages/api/trending";
-import { MediaType, MovieSchema } from "../types";
+import { ExtractedResult, MediaType, MovieSchema } from "../types";
 
 enum MovieQueryType {
   "top_rated",
@@ -22,7 +22,7 @@ export const useGetTrending = <T extends keyof typeof MediaType | undefined>({
   key: string[];
   time_window?: keyof typeof TimeWindow;
   media_type?: T;
-}): UseQueryResult<MovieSchema<T>, Error> => {
+}): UseQueryResult<ExtractedResult<"movie"> & ExtractedResult<"tv">, Error> => {
   return useQuery(
     key,
     async () => {
