@@ -1,16 +1,18 @@
 import React from "react";
 import { useKeenSlider } from "keen-slider/react";
-import Image from "next/image";
 import { MovieInterface, TVInterface } from "../../lib/types";
-
-import Link from "next/link";
+import Image from "next/image";
+import Ratings from "../Utils/Ratings";
+import { getGenres } from "../../lib/util";
 
 type CarouselProps<T> = {
   data: T;
+  type: "tv" | "movie";
 };
 
 const Carousel: React.FC<CarouselProps<MovieInterface[] | TVInterface[]>> = ({
   data,
+  type,
 }) => {
   const [sliderRef] = useKeenSlider<HTMLDivElement>({
     initial: 0,
@@ -40,14 +42,14 @@ const Carousel: React.FC<CarouselProps<MovieInterface[] | TVInterface[]>> = ({
 
   return (
     <div className="overflow-x-hidden">
-      <div className="my-4 relative w-full">
+      <div className="my-4 relative w-full h-auto">
         <div
           ref={sliderRef}
-          className="keen-slider h-[450px] grid w-full place-items-center min-w-[300px] pr-4 py-4 "
+          className="keen-slider h-full grid w-full place-items-center min-w-[300px] pr-4 py-4 "
         >
           {data
             ? data.map((movie) => (
-                <CarouselSlide movie={movie} key={movie.id} />
+                <CarouselSlide movie={movie} key={movie.id} type={type} />
               ))
             : null}
         </div>
@@ -56,9 +58,10 @@ const Carousel: React.FC<CarouselProps<MovieInterface[] | TVInterface[]>> = ({
   );
 };
 
-const CarouselSlide: React.FC<{ movie: MovieInterface | TVInterface }> = ({
-  movie,
-}) => {
+const CarouselSlide: React.FC<{
+  movie: MovieInterface | TVInterface;
+  type: "movie" | "tv";
+}> = ({ movie, type }) => {
   const textColor = (vote: number) => {
     if (vote < 5) {
       return "text-orange-500";
@@ -68,53 +71,58 @@ const CarouselSlide: React.FC<{ movie: MovieInterface | TVInterface }> = ({
       return "text-green-500";
     }
   };
-
+  const score = Math.ceil(movie.vote_average) / 2;
+  const genres = getGenres(movie.genre_ids, type);
   return (
-    <div
-      className="keen-slider__slide  cursor-pointer relative rounded w-auto h-fit
-       max-w-sm max-h-[600px] group
-    "
-    >
-      <Link href={`/${movie.media_type ?? "movie"}/${movie.id}`}>
+    <div className="keen-slider__slide rounded bg-neutral-900/60 backdrop-blur group h-full">
+      <div className="text-center">
+        <h4 className="line-clamp-1 font-semibold"></h4>
+      </div>
+      <div className="relative">
         <Image
           src={`https://image.tmdb.org/t/p/original${movie.poster_path ?? ""}`}
           //@ts-ignore
           alt={`${movie.title ?? movie.name}`}
-          className="rounded-lg transition-transform w-full object-cover object-center p-2 bg-neutral-900 "
+          className=" transition-transform w-full h-full object-fill bg-neutral-900 p-2 rounded-xl"
           loading="lazy"
-          fill
+          width={500}
+          height={450}
           sizes="(max-width: 768px) 100vw,
               (max-width: 1200px) 50vw,
               33vw"
+          placeholder="blur"
+          blurDataURL="data:image/webp;base64,UklGRsoCAABXRUJQVlA4WAoAAAAgAAAAEQEAtgAASUNDUBgCAAAAAAIYAAAAAAQwAABtbnRyUkdCIFhZWiAAAAAAAAAAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAAHRyWFlaAAABZAAAABRnWFlaAAABeAAAABRiWFlaAAABjAAAABRyVFJDAAABoAAAAChnVFJDAAABoAAAAChiVFJDAAABoAAAACh3dHB0AAAByAAAABRjcHJ0AAAB3AAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAFgAAAAcAHMAUgBHAEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFhZWiAAAAAAAABvogAAOPUAAAOQWFlaIAAAAAAAAGKZAAC3hQAAGNpYWVogAAAAAAAAJKAAAA+EAAC2z3BhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABYWVogAAAAAAAA9tYAAQAAAADTLW1sdWMAAAAAAAAAAQAAAAxlblVTAAAAIAAAABwARwBvAG8AZwBsAGUAIABJAG4AYwAuACAAMgAwADEANlZQOCCMAAAA0A4AnQEqEgG3AD7tdrhWqaclI6AoATAdiWlu4XaxG0AJ7APfbJyHvtk5D32ych77ZOQ99snIe+2TkPfbJyHvtk5D32ych77ZOQ99snIe+2TkPfbJyHvtk5D32ych77ZOQ99snIe+2TkPfbJyHvtk5D32ych77ZOQ99snIe+sAAD+/3QpAAAAAAAAAAA="
         />
-
-        <div className="w-full p-4 bg-neutral-900 absolute left-0 -bottom-0 space-y-4  ">
-          <div>
-            <h2 className="text-center line-clamp-1 text-lg font-bold">
-              {/*@ts-ignore */}
+        <div className=" p-4 bg-neutral-900/60 backdrop-blur absolute bottom-0 left-0 w-full">
+          <div className=" h-fit w-full">
+            <h4 className=" line-clamp-1 text-neutral-50 text-lg font-bold">
+              {/* @ts-ignore */}
               {movie.title ?? movie.name}
-            </h2>
-          </div>
-          <div className="flex gap-4 justify-evenly">
-            <div className={` text-center relative mt-2`}>
-              <p className="text-sm   z-40 font-normal">
-                {Math.ceil(movie.vote_average)}
-              </p>
-              <p className="text-xs text-neutral-500">User Score</p>
-            </div>
-            <div className={`text-center relative mt-2`}>
-              <p className="text-sm  z-40 font-normal">0%</p>
-              <p className="text-xs text-neutral-500">Moist Meter</p>
-            </div>
-            <div className={`text-center relative mt-2`}>
-              <p className="text-sm before:content-['#'] z-40 font-normal">
-                {Math.ceil(movie.popularity)}
-              </p>
-              <p className="text-xs text-neutral-500">Popularity</p>
+            </h4>
+
+            <Ratings score={String(score).split(".")} />
+            <div className="flex justify-between items-center">
+              <ul className="flex gap-2 mt-2 items-center flex-wrap">
+                {genres.map((value, index) =>
+                  index < 2 ? (
+                    <li
+                      key={value.id}
+                      className="text-xs p-1 bg-neutral-800 rounded"
+                    >
+                      {value.name}
+                    </li>
+                  ) : null
+                )}
+                {genres.length - 2 !== 0 ? (
+                  <li className="text-xs p-1 bg-neutral-800 rounded">
+                    +{genres.length - 2}
+                  </li>
+                ) : null}
+              </ul>
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 };

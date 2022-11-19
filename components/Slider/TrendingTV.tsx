@@ -1,9 +1,8 @@
-import { useGetMovies } from "../../lib/api/useGetMovies";
 import { useGetTrending } from "../../lib/api/useGetTrending";
 import Carousel from "./Carousel";
 import DefaultLoader from "./DefaultLoader";
 
-const TrendingMovies: React.FC = () => {
+const TrendingTV: React.FC = () => {
   const { data, isError, error, status } = useGetTrending({
     key: ["trending", "tv", "week"],
     time_window: "week",
@@ -17,9 +16,9 @@ const TrendingMovies: React.FC = () => {
       return <DefaultLoader />;
     }
     case "success": {
-      return <Carousel data={data.results} />;
+      return <Carousel data={data.results} type="tv" />;
     }
   }
 };
 
-export default TrendingMovies;
+export default TrendingTV;

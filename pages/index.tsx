@@ -1,7 +1,7 @@
 import HeroSlider from "../components/Slider/HeroSlider";
 import MetaHeader from "../lib/seo/MetaHeader";
 import PopularMovies from "../components/Slider/PopularMovies";
-import TrendingMovies from "../components/Slider/TrendingMovies";
+import TrendingTV from "../components/Slider/TrendingTV";
 
 export default function Home() {
   return (
@@ -38,7 +38,7 @@ export default function Home() {
               Trending TV
             </h3>
           </div>
-          <TrendingMovies />
+          <TrendingTV />
         </div>
       </section>
     </div>

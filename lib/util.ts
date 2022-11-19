@@ -1,3 +1,5 @@
+import { MOVIE_GENRES, TV_GENRES } from "./constants/genres";
+
 export const formatDate = (date: string) => {
   return new Intl.DateTimeFormat("en-US", {
     day: "numeric",
@@ -20,4 +22,18 @@ export const getUserScoreTemp = (vote: number) => {
   } else if (vote >= 7.5) {
     return "text-emerald-500";
   }
+};
+
+export const getGenres = (ids: number[], type: "tv" | "movie") => {
+  const genres: { id: number; name: string }[] = [];
+  const genreList = type === "tv" ? TV_GENRES : MOVIE_GENRES;
+  ids.map((id) => {
+    genreList.map((value) => {
+      if (value.id === id) {
+        genres.push(value);
+      }
+    });
+  });
+
+  return genres.sort((a, b) => a.name.length - b.name.length);
 };
