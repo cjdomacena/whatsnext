@@ -10,7 +10,11 @@ import Navbar from "../components/Header/Navbar";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import MetaHeader from "../lib/seo/MetaHeader";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -42,8 +46,9 @@ export default function App({
         )}
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={true} />
-
-          <Component {...pageProps} />
+          <Hydrate state={pageProps.dehydratedState}>
+            <Component {...pageProps} />
+          </Hydrate>
         </QueryClientProvider>
       </main>
     </SessionContextProvider>

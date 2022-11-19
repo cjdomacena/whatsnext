@@ -154,10 +154,7 @@ const DetailPage = (
     </div>
   );
 };
-enum Tx {
-  "tv",
-  "movie",
-}
+
 const TitleHeader: React.FC<Intersect<"movie"> & Intersect<"tv">> = (
   details
 ) => {

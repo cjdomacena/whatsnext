@@ -27,7 +27,7 @@ export const useGetTrending = <T extends keyof typeof MediaType | undefined>({
     key,
     async () => {
       const req = await fetch(
-        `/api/trending?time_window=${time_window}&media_type=${media_type}`
+        `${process.env.VERCEL_URL}/api/trending?time_window=${time_window}&media_type=${media_type}`
       );
       const res = await req.json();
       if (res.hasOwnProperty("error")) {
