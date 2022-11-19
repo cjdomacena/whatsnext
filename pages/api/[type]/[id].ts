@@ -12,10 +12,8 @@ export default async function handler(
   const { query } = req;
   try {
     if (query.hasOwnProperty("type") && query.hasOwnProperty("id")) {
-      const id = (query.id as string).split("-");
-      const query_id = id[id.length - 1];
       const data = await fetch(
-        `${process.env.TMDB_URL}/${query.type}/${query_id}?api_key=${process.env.TMDB_API_KEY}&language=en-US`
+        `${process.env.TMDB_URL}/${query.type}/${query.id}?api_key=${process.env.TMDB_API_KEY}&language=en-US`
       );
       const results = await data.json();
       return res.status(200).json(results);

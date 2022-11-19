@@ -3,17 +3,17 @@ import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import MetaHeader from "../../lib/seo/MetaHeader";
-import { ExtractedResult, MovieInterface, TVInterface } from "../../lib/types";
-import { getYear } from "../../lib/util";
 import MovieLayout from "../../components/Layouts/MovieLayout";
-import { MOVIE } from "../../lib/constants/testData";
 import Image from "next/image";
+import { IoArrowBackOutline } from "react-icons/io5";
+import Link from "next/link";
+import { Intersect, MovieDetails } from "../../lib/types/movies";
 const getDetail = async (
   type: string | string[] | undefined,
   id: number | string | undefined | string[]
 ) => {
   try {
-    const req = await fetch(`/api/${type}/${id}`);
+    const req = await fetch(`http://localhost:3000/api/${type}/${id}`);
     const res = await req.json();
     if (res.hasOwnProperty("error")) {
       throw new Error(res.error);
@@ -36,8 +36,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     query.type === "tv"
   ) {
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery([query.type, query.id], () =>
-      getDetail(query.type, query.id)
+    await queryClient.prefetchQuery(
+      {
+        queryKey: [query.type, query.id],
+        queryFn: () => getDetail(query.type, query.id),
+      }
+      // }, () =>
+      //   getDetail(query.type, query_id)
     );
     return {
       props: {
@@ -56,86 +61,98 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
-
+enum DType {
+  "tv",
+  "movie",
+}
 const DetailPage = (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
-  // const router = useRouter();
-  // const {
-  //   data: details,
-  //   status,
-  //   error,
-  // } = useQuery<ExtractedResult<TVInterface & MovieInterface>, Error>(
-  //   [router.query.type, router.query.id],
-  //   () => getDetail(router.query.type, router.query.id),
-  //   {
-  //     refetchOnMount: false,
-  //     refetchOnWindowFocus: false,
-  //     retry: 1,
-  //     enabled: false,
-  //     staleTime: 5000,
-  //   }
-  // );
+  const router = useRouter();
+  const { id, type } = router.query;
+  const { data: details, error } = useQuery<
+    Intersect<"movie"> & Intersect<"tv">,
+    Error
+  >([type, id], () => getDetail(type, id), {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: 1,
+    enabled: router.isReady,
+    staleTime: 5000,
+    suspense: true,
+  });
 
-  // if (error) {
-  //   throw error;
-  // }
-  const details = MOVIE;
+  if (error) {
+    throw error;
+  }
+
   return (
     <div>
-      <MetaHeader
-        title={`${details?.name} (${getYear(
-          details?.first_air_date
-        )}) — WhatsNext: Platform for the lazy`}
-        description="Your No. 1 source of movies"
-      />
-      <MovieLayout>
-        <div className="overflow-hidden absolute left-0 top-0">
-          <div className="w-screen h-[500px] ">
-            <Image
-              src="https://image.tmdb.org/t/p/w300/xHkOKPUe3ioXyPIe5odyL6o6cp4.jpg"
-              fill
-              alt=""
-              sizes="(max-width: 768px) 100vw,
-            (max-width: 1200px) 50vw,
-            33vw"
-              className="blur-[500px]"
+      <Suspense fallback={<div>Loading...</div>}>
+        {details ? (
+          <>
+            <MetaHeader
+              title={`${
+                details?.name ?? details.title
+              } — WhatsNext: Platform for the lazy`}
+              description="Your No. 1 source of movies"
             />
-          </div>
-        </div>
-
-        <h1 className="text-6xl font-bold">{details.name}</h1>
-      </MovieLayout>
+            <div
+              className={`w-full min-h-[600px] bg-cover bg-no-repeat bg-center  relative z-10 grid place-items-center`}
+              style={{
+                backgroundImage: `url(https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${details.backdrop_path})`,
+              }}
+            >
+              <div className="absolute w-full h-full top-0 left-0 z-20 bg-neutral-900/80 backdrop-blur"></div>
+              <div className="container mx-auto z-30 ">
+                <div className="w-fit mx-auto rounded space-y-8 text-center">
+                  <div>
+                    <h1 className="text-8xl font-black">
+                      {details.name ?? details.title}
+                    </h1>
+                    <p className="text-2xl">{details?.tagline ?? null}</p>
+                  </div>
+                  <ul className="flex gap-4 text-xs justify-center">
+                    {details?.genres?.map(
+                      (genre: { id: number; name: string }) => (
+                        <li
+                          key={genre.id}
+                          className=" text-neutral-300 px-6 py-2 rounded font-bold"
+                        >
+                          {genre.name}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <MovieLayout>
+              <div className=" flex 2xl:flex-nowrap xl:flex-nowrap lg:flex-nowrap flex-wrap">
+                <div className="min-w-[300px] mt-10 text-neutral-400">
+                  <Link href="/">
+                    <p className="flex items-center gap-4 group w-fit ">
+                      <IoArrowBackOutline className="group-hover:-translate-x-4 transition-transform" />
+                      Back
+                    </p>
+                  </Link>
+                </div>
+                <div>
+                  <h2 className="text-6xl font-black 2xl:leading-loose xl:leading-loose lg:leading-loose leading-relaxed break-words">
+                    Overview
+                    {/* {details.name ?? details.title} */}
+                  </h2>
+                  <p className="text-2xl font-extralight leading-loose text-neutral-300">
+                    {details.overview}
+                  </p>
+                </div>
+              </div>
+            </MovieLayout>
+          </>
+        ) : null}
+      </Suspense>
     </div>
   );
-
-  // return (
-  //   <div>
-  //     <Suspense
-  //       fallback={
-  //         <div className="text-white">
-  //           <h1>Loading...</h1>
-  //         </div>
-  //       }
-  //     >
-  //       {details ? (
-  //         <div>
-  //           <MetaHeader
-  //             title={`${details?.title ?? details?.name} (${getYear(
-  //               details?.first_air_date ?? details?.release_date
-  //             )}) — WhatsNext: Platform for the lazy`}
-  //             description="Your No. 1 source of movies"
-  //           />
-  //           <MovieLayout>
-  //             <h1 className="text-6xl font-bold">
-  //               {details.title ?? details.name}
-  //             </h1>
-  //           </MovieLayout>
-  //         </div>
-  //       ) : null}
-  //     </Suspense>
-  //   </div>
-  // );
 };
 
 export default DetailPage;
