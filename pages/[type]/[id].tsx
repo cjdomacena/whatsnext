@@ -4,29 +4,26 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import MetaHeader from "../../lib/seo/MetaHeader";
 import MovieLayout from "../../components/Layouts/MovieLayout";
-import { IoArrowBackOutline } from "react-icons/io5";
-import Link from "next/link";
 import { Intersect } from "../../lib/types/movies";
+import Image from "next/image";
 import * as Tabs from "@radix-ui/react-tabs";
-const getDetail = async (
-  type: string | string[] | undefined,
-  id: number | string | undefined | string[]
-) => {
-  try {
-    const url = `/api/${type}/${id}`;
-    const req = await fetch(url);
-    const res = await req.json();
-    if (res.hasOwnProperty("error")) {
-      throw new Error(res.error);
-    }
-    if (res.status === 500) {
-      throw new Error("Something went wrong");
-    }
-    return res;
-  } catch (e) {
-    throw e;
-  }
-};
+import {
+  CastCredit,
+  Keywords,
+  ProductionCredit,
+} from "../../lib/types/credits";
+import Link from "next/link";
+import { getDetail } from "../../lib/api/getDetails";
+
+enum DType {
+  "tv",
+  "movie",
+}
+type DetailsProps = Intersect<"movie"> &
+  Intersect<"tv"> & {
+    credits: { cast: CastCredit[]; crew: ProductionCredit[] };
+    keywords: Keywords;
+  };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query } = context;
@@ -37,14 +34,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     query.type === "tv"
   ) {
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery(
-      {
-        queryKey: [query.type, query.id],
-        queryFn: () => getDetail(query.type, query.id),
-      }
-      // }, () =>
-      //   getDetail(query.type, query_id)
-    );
+    await queryClient.prefetchQuery({
+      queryKey: [query.type, query.id],
+      queryFn: () => getDetail(query.type, query.id),
+    });
     return {
       props: {
         hasError: false,
@@ -62,30 +55,55 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
-enum DType {
-  "tv",
-  "movie",
-}
+
+const tabs: {
+  value: string;
+  name: string;
+  withPing: boolean;
+  isShowing: boolean;
+}[] = [
+  { value: "overview", name: "Overview", withPing: false, isShowing: true },
+  { value: "cast", name: "Cast", withPing: false, isShowing: true },
+  {
+    value: "currentSeason",
+    name: "Current Season",
+    withPing: false,
+    isShowing: true,
+  },
+  {
+    value: "discussion",
+    name: "Discussion",
+    withPing: true,
+    isShowing: true,
+  },
+];
+
 const DetailPage = (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
   const router = useRouter();
   const { id, type } = router.query;
-  const { data: details, error } = useQuery<
-    Intersect<"movie"> & Intersect<"tv">,
-    Error
-  >([type, id], () => getDetail(type, id), {
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    retry: 1,
-    enabled: router.isReady,
-    staleTime: 5000,
-    suspense: true,
-  });
+  const { data: details, error } = useQuery<DetailsProps, Error>(
+    [type, id],
+    () => getDetail(type, id),
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: 1,
+      enabled: router.isReady,
+      staleTime: 5000,
+      suspense: true,
+    }
+  );
 
   if (error) {
     throw error;
   }
+
+  const keywords = details?.keywords.results
+    ? details.keywords.results
+    : details?.keywords.keywords;
+
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
@@ -100,54 +118,84 @@ const DetailPage = (
             <TitleHeader {...details} />
 
             <MovieLayout>
-              <div className=" flex 2xl:flex-nowrap xl:flex-nowrap lg:flex-nowrap flex-wrap">
-                <div className="min-w-[300px] mt-0 text-neutral-400">
-                  <Link href="/">
-                    <p className="flex items-center gap-4 group w-fit ">
-                      <IoArrowBackOutline className="group-hover:-translate-x-4 transition-transform" />
-                      Back
-                    </p>
-                  </Link>
-                </div>
-                <div>
-                  <div>
-                    <Tabs.Root defaultValue="overview" orientation="horizontal">
-                      <Tabs.List>
-                        <Tabs.Trigger
-                          value="overview"
-                          className=" data-[state='active']:bg-amber-500 data-[state='inactive']:bg-transparent p-2 rounded transition-colors"
-                        >
-                          Overview
-                        </Tabs.Trigger>
-                        <Tabs.Trigger
-                          value="cast"
-                          className=" p-2 rounded data-[state='active']:bg-amber-500 data-[state='inactive']:bg-transparent transition-colors"
-                        >
-                          Casts
-                        </Tabs.Trigger>
-                      </Tabs.List>
-                      <Tabs.Content value="overview">
-                        <div className=" min-h-[400px]">
-                          <h2 className="text-6xl font-black 2xl:leading-loose xl:leading-loose lg:leading-loose leading-relaxed break-words">
-                            Overview
-                            {/* {details.name ?? details.title} */}
-                          </h2>
-                          <p className="text-2xl font-extralight leading-loose text-neutral-300">
-                            {details.overview}
-                          </p>
-                        </div>
-                      </Tabs.Content>
-                      <Tabs.Content value="cast">
-                        <div className=" min-h-[400px]">
-                          <h2 className="text-6xl font-black 2xl:leading-loose xl:leading-loose lg:leading-loose leading-relaxed break-words">
-                            Casts
-                          </h2>
-                        </div>
-                      </Tabs.Content>
-                    </Tabs.Root>
+              <Tabs.Root
+                defaultValue="overview"
+                orientation="horizontal"
+                className="space-y-2"
+              >
+                <Tabs.List className="fixed bottom-8 left-0 grid place-items-center w-full grid-cols-1 z-50">
+                  <div className=" bg-neutral-900/60 backdrop-blur  py-1 px-1 ring ring-neutral-900 w-auto gap-1 rounded-full flex justify-between items-center drop-shadow-[0_2px_10px_rgba(255,255,255,0.09)]">
+                    {tabs.map((tab, index) =>
+                      tab.isShowing ? (
+                        <Trigger value={tab.value} key={tab.value + `${index}`}>
+                          {tab.withPing ? (
+                            <div className="rounded-full top-2 right-2 absolute bg-green-500/20 ">
+                              <p className="p-[0.2rem] bg-green-500 rounded-full animate-ping"></p>
+                            </div>
+                          ) : null}
+                          {tab.name}
+                        </Trigger>
+                      ) : null
+                    )}
                   </div>
-                </div>
-              </div>
+                </Tabs.List>
+                <Tabs.Content value="overview">
+                  <div className="min-h-[450px] gap-12 flex  2xl:flex-nowrap xl:flex-nowrap lg:flex-nowrap md:flex-nowrap flex-wrap">
+                    <div className=" w-fit ">
+                      <div className="w-[300px] h-[450px] bg-neutral-900 relative ">
+                        <Image
+                          src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${details.poster_path}`}
+                          alt=""
+                          fill
+                          loading="lazy"
+                          className="object-contain  drop-shadow-[0_2px_10px_rgba(255,255,255,0.05)]"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex-grow max-w-[1000px] space-y-4">
+                      <div>
+                        <h2 className="text-4xl font-black 2xl:leading-loose xl:leading-loose lg:leading-loose leading-relaxed break-words">
+                          Overview
+                          {/* {details.name ?? details.title} */}
+                        </h2>
+                        <p className="text-lg font-extralight leading-loose text-neutral-300">
+                          {details.overview}
+                        </p>
+                      </div>
+                    </div>
+                    <div className=" h-auto text-neutral-500">
+                      {/* <div>
+                        <h4 className="text-sm font-bold text-neutral-400">
+                          Production
+                        </h4>
+                      </div> */}
+                      <div>
+                        <h4 className="text-sm font-bold text-neutral-400">
+                          Keywords
+                        </h4>
+
+                        <ul className=" mt-2 flex flex-wrap gap-2">
+                          {keywords?.map((keyword) => (
+                            <li
+                              className="text-xs  text-neutral-500 w-fit rounded-full hover:text-neutral-400 "
+                              key={keyword.id}
+                            >
+                              <Link href="/">{keyword.name}</Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </Tabs.Content>
+                <Tabs.Content value="cast">
+                  <div className=" min-h-[400px]">
+                    <h2 className="text-4xl font-black 2xl:leading-loose xl:leading-loose lg:leading-loose leading-relaxed break-words">
+                      Current Season
+                    </h2>
+                  </div>
+                </Tabs.Content>
+              </Tabs.Root>
             </MovieLayout>
           </>
         ) : null}
@@ -156,9 +204,20 @@ const DetailPage = (
   );
 };
 
-const TitleHeader: React.FC<Intersect<"movie"> & Intersect<"tv">> = (
-  details
+const Trigger: React.FC<React.PropsWithChildren<Tabs.TabsTriggerProps>> = (
+  props
 ) => {
+  return (
+    <Tabs.Trigger
+      className="data-[state='active']:bg-neutral-800 px-4 py-2 rounded-full text-xs transition-colors"
+      {...props}
+    >
+      {props.children}
+    </Tabs.Trigger>
+  );
+};
+
+const TitleHeader = <T extends DetailsProps>(details: T) => {
   return (
     <div
       className={`w-full min-h-[600px] bg-cover bg-no-repeat bg-center  relative z-10 grid place-items-center`}
@@ -170,12 +229,14 @@ const TitleHeader: React.FC<Intersect<"movie"> & Intersect<"tv">> = (
       <div className="container mx-auto z-30 ">
         <div className="w-fit mx-auto rounded space-y-8 text-center">
           <div>
-            <h1 className="text-8xl font-black">
+            <h1 className="2xl:text-8xl xl:text-8xl lg:text-8xl text-4xl font-black">
               {details.name ?? details.title}
             </h1>
-            <p className="text-2xl">{details?.tagline ?? null}</p>
+            <p className="2xl:text-2xl xl:text-2xl lg:text-2xl text-lg">
+              {details?.tagline ?? null}
+            </p>
           </div>
-          <ul className="flex gap-4 text-xs justify-center">
+          <ul className="flex gap-4 text-xs justify-center flex-wrap">
             {details?.genres?.map((genre: { id: number; name: string }) => (
               <li
                 key={genre.id}

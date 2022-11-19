@@ -45,7 +45,7 @@ export default function App({
           <Navbar />
         )}
         <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={true} />
+          <ReactQueryDevtools initialIsOpen={false} />
           <Hydrate state={pageProps.dehydratedState}>
             <Component {...pageProps} />
           </Hydrate>
