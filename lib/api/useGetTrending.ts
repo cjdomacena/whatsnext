@@ -22,7 +22,7 @@ export const useGetTrending = <T extends keyof typeof MediaType | undefined>({
   key: string[];
   time_window?: keyof typeof TimeWindow;
   media_type?: T;
-}): UseQueryResult<ExtractedResult<"movie"> & ExtractedResult<"tv">, Error> => {
+}): UseQueryResult<MovieSchema<"movie"> & MovieSchema<"tv">, Error> => {
   return useQuery(
     key,
     async () => {

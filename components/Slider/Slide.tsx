@@ -1,12 +1,12 @@
 import React from "react";
 import Image from "next/image";
-import { MovieInterface, TVInterface } from "../../lib/types";
+import { ExtractedResult, MovieInterface, TVInterface } from "../../lib/types";
 import Link from "next/link";
 
 type Props = {
   width: number;
   path: string;
-  result: MovieInterface & TVInterface;
+  result: any; // I give up
 };
 
 const formatDate = (date: string) => {
@@ -52,12 +52,7 @@ const Slide: React.FC<Props> = ({ width, path, result }) => {
         <p className="text-xs uppercase">{result.media_type}</p>
 
         <p className=" line-clamp-2 text-xs">{result.overview}</p>
-        <Link
-          href={`${result.media_type}/${getUrlPath(
-            result.name ?? result.title,
-            String(result.id)
-          )}`}
-        >
+        <Link href={`${result.media_type}/${result.id}`}>
           <p className="text-xs text-amber-500 font-bold mt-2 flex gap-2 items-center group bg-amber-900/50 w-fit rounded px-2 py-2 hover:bg-amber-900/90 transition-opacity">
             View Details
           </p>

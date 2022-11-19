@@ -3,33 +3,13 @@ import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
 import Slide, { SlideLoading } from "./Slide";
 import { useGetTrending } from "../../lib/api/useGetTrending";
-import { MovieSchema } from "../../lib/types";
+import { ExtractedResult, MovieInterface, MovieSchema } from "../../lib/types";
 
 const HeroSlider: React.FC = () => {
   const { data, isError, status, error } = useGetTrending({
     key: ["trending", "day", "all"],
     time_window: "day",
     media_type: "all",
-  });
-  const [ref] = useKeenSlider<HTMLDivElement>({
-    initial: 0,
-    loop: false,
-    mode: "snap",
-    breakpoints: {
-      // 400px and up
-      "(min-width: 400px)": {
-        slides: { perView: 1, spacing: 5 },
-      },
-      // 1000px and up
-      "(min-width: 1000px)": {
-        slides: { perView: 3, spacing: 5 },
-      },
-    },
-    // Default behaviour
-    slides: {
-      perView: 1,
-      spacing: 15,
-    },
   });
 
   if (isError) {
@@ -61,7 +41,11 @@ const HeroSlider: React.FC = () => {
   }
 };
 
-const Slider = ({ data }: { data: MovieSchema<"all"> | undefined }) => {
+const Slider = ({
+  data,
+}: {
+  data: (MovieSchema<"tv"> & MovieSchema<"movie">) | undefined;
+}) => {
   const [ref] = useKeenSlider<HTMLDivElement>({
     initial: 0,
     loop: false,
