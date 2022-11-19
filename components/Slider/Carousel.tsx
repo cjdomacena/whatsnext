@@ -1,15 +1,17 @@
 import React from "react";
 import { useKeenSlider } from "keen-slider/react";
-import SlideImage from "./SlideImage";
-import { GiPopcorn } from "react-icons/gi";
+import Image from "next/image";
 import { MovieInterface, TVInterface } from "../../lib/types";
-import { getUserScoreTemp } from "../../lib/util";
 
-type CarouselProps = {
-  data: MovieInterface[] | TVInterface[];
+import Link from "next/link";
+
+type CarouselProps<T> = {
+  data: T;
 };
 
-const Carousel: React.FC<CarouselProps> = ({ data }) => {
+const Carousel: React.FC<CarouselProps<MovieInterface[] | TVInterface[]>> = ({
+  data,
+}) => {
   const [sliderRef] = useKeenSlider<HTMLDivElement>({
     initial: 0,
     loop: false,
@@ -24,10 +26,10 @@ const Carousel: React.FC<CarouselProps> = ({ data }) => {
       },
       // 1000px and up
       "(min-width: 1000px)": {
-        slides: { perView: 4, spacing: 15 },
+        slides: { perView: 4, spacing: 25 },
       },
-      "(min-width: 1280px)": {
-        slides: { perView: 6, spacing: 15 },
+      "(min-width: 1440px)": {
+        slides: { perView: 6, spacing: 25 },
       },
     },
     slides: {
@@ -41,7 +43,7 @@ const Carousel: React.FC<CarouselProps> = ({ data }) => {
       <div className="my-4 relative w-full">
         <div
           ref={sliderRef}
-          className="keen-slider h-[450px] grid w-full place-items-center min-w-[300px]"
+          className="keen-slider h-[450px] grid w-full place-items-center min-w-[300px] pr-4 py-4 "
         >
           {data
             ? data.map((movie) => (
@@ -66,32 +68,53 @@ const CarouselSlide: React.FC<{ movie: MovieInterface | TVInterface }> = ({
       return "text-green-500";
     }
   };
+
   return (
     <div
       className="keen-slider__slide  cursor-pointer relative rounded w-auto h-fit
        max-w-sm max-h-[600px] group
     "
     >
-      <SlideImage path={movie.poster_path ?? ""} width={342} />
-      <div className="w-full p-4 bg-black/60 absolute left-0 -bottom-0 backdrop-blur-sm flex items-center gap-2">
-        <div
-          className={`${textColor(
-            movie.vote_average
-          )} text-center relative self-center mt-2`}
-        >
-          <GiPopcorn className={` w-8 h-8 `} />
-          <p className="text-sm after:content-['%']  z-40 font-bold">
-            {Math.ceil(movie.vote_average * 10)}
-          </p>
+      <Link href={`/${movie.media_type ?? "movie"}/${movie.id}`}>
+        <Image
+          src={`https://image.tmdb.org/t/p/original${movie.poster_path ?? ""}`}
+          //@ts-ignore
+          alt={`${movie.title ?? movie.name}`}
+          className="rounded-lg transition-transform w-full object-cover object-center p-2 bg-neutral-900 "
+          loading="lazy"
+          fill
+          sizes="(max-width: 768px) 100vw,
+              (max-width: 1200px) 50vw,
+              33vw"
+        />
+
+        <div className="w-full p-4 bg-neutral-900 absolute left-0 -bottom-0 space-y-4  ">
+          <div>
+            <h2 className="text-center line-clamp-1 text-lg font-bold">
+              {/*@ts-ignore */}
+              {movie.title ?? movie.name}
+            </h2>
+          </div>
+          <div className="flex gap-4 justify-evenly">
+            <div className={` text-center relative mt-2`}>
+              <p className="text-sm   z-40 font-normal">
+                {Math.ceil(movie.vote_average)}
+              </p>
+              <p className="text-xs text-neutral-500">User Score</p>
+            </div>
+            <div className={`text-center relative mt-2`}>
+              <p className="text-sm  z-40 font-normal">0%</p>
+              <p className="text-xs text-neutral-500">Moist Meter</p>
+            </div>
+            <div className={`text-center relative mt-2`}>
+              <p className="text-sm before:content-['#'] z-40 font-normal">
+                {Math.ceil(movie.popularity)}
+              </p>
+              <p className="text-xs text-neutral-500">Popularity</p>
+            </div>
+          </div>
         </div>
-        <div className="text-sm w-3/4">
-          <h3 className="font-semibold truncate text-lg">
-            {/* @ts-ignore */}
-            {movie.title ?? movie.name}
-          </h3>
-          <p className=" line-clamp-2 text-xs">{movie.overview}</p>
-        </div>
-      </div>
+      </Link>
     </div>
   );
 };

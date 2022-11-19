@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { TimeWindow } from "../../pages/api/trending";
-import { ExtractedResult, MediaType, MovieSchema } from "../types";
+import { MediaType, MovieSchema } from "../types";
 
 enum MovieQueryType {
   "top_rated",

@@ -1,5 +1,4 @@
-import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export enum TimeWindow {
   "day",

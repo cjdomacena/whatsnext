@@ -1,7 +1,5 @@
-import Head from "next/head";
 import HeroSlider from "../components/Slider/HeroSlider";
 import MetaHeader from "../lib/seo/MetaHeader";
-import Carousel from "../components/Slider/Carousel";
 import PopularMovies from "../components/Slider/PopularMovies";
 import TrendingMovies from "../components/Slider/TrendingMovies";
 

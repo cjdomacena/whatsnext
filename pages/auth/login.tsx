@@ -1,8 +1,5 @@
-"use client";
-
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import {
-  AuthApiError,
   AuthError,
   SignInWithPasswordCredentials,
 } from "@supabase/supabase-js";

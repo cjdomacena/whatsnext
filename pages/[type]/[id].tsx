@@ -4,10 +4,9 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import MetaHeader from "../../lib/seo/MetaHeader";
 import MovieLayout from "../../components/Layouts/MovieLayout";
-import Image from "next/image";
 import { IoArrowBackOutline } from "react-icons/io5";
 import Link from "next/link";
-import { Intersect, MovieDetails } from "../../lib/types/movies";
+import { Intersect } from "../../lib/types/movies";
 import * as Tabs from "@radix-ui/react-tabs";
 const getDetail = async (
   type: string | string[] | undefined,
