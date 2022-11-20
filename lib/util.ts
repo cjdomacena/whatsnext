@@ -1,3 +1,4 @@
+import { DetailsProps } from "../pages/[type]/[id]";
 import { MEDIA_TYPE } from "./constants/enums";
 import { MOVIE_GENRES, TV_GENRES } from "./constants/genres";
 
@@ -47,4 +48,21 @@ export const textColor = (vote: number) => {
   } else if (vote >= 7.5) {
     return "text-green-500";
   }
+};
+
+export const parseMeta = ({
+  details,
+  type,
+}: {
+  details?: DetailsProps;
+  type: string | string[] | undefined;
+}): { title: string | null; date: string | null } => {
+  if (details && typeof type === "string") {
+    if (type === "movie") {
+      return { title: details.title, date: details.release_date ?? null };
+    } else if (type === "tv") {
+      return { title: details.name, date: details.first_air_date ?? null };
+    }
+  }
+  return { title: null, date: null };
 };
