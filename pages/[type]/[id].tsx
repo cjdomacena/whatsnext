@@ -19,7 +19,7 @@ import {
   TabContent,
 } from "../../components/elements/tabs/DetailPage";
 import Ratings from "../../components/Utils/Ratings";
-import MovieLayout from "../../components/layouts/MovieLayout";
+import MovieLayout from "./../../components/layouts/MovieLayout";
 
 export type DetailsProps = Intersect<"movie"> &
   Intersect<"tv"> & {
