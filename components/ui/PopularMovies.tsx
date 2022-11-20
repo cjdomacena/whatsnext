@@ -1,6 +1,6 @@
 import { useGetMovies } from "../../lib/api/useGetMovies";
-import Carousel from "./Carousel";
-import Loader from "./Loader";
+import Carousel from "../elements/slider/Carousel";
+import Loader from "../elements/slider/Loader";
 
 const PopularMovies: React.FC = () => {
   const { data, isError, error, status } = useGetMovies({

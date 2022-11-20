@@ -1,6 +1,6 @@
-import HeroSlider from "../components/Slider/HeroCarousel/";
-import PopularMovies from "../components/Slider/PopularMovies";
-import TrendingTV from "../components/Slider/TrendingTV";
+import HeroCarousel from "../components/ui/HeroCarousel";
+import PopularMovies from "../components/ui/PopularMovies";
+import TrendingTV from "../components/ui/TrendingTV";
 import MetaHeader from "../lib/seo/MetaHeader";
 
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
         </div>
       </div>
       <section>
-        <HeroSlider />
+        <HeroCarousel />
       </section>
 
       <section className="mx-4 my-4 space-y-4 text-neutral-200 ">

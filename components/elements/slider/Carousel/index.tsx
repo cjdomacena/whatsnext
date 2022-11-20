@@ -1,6 +1,6 @@
 import React from "react";
 import { useKeenSlider } from "keen-slider/react";
-import { TrendingResult } from "../../../lib/types";
+import { TrendingResult } from "../../../../lib/types";
 import CarouselSlide from "./CarouselSlide";
 
 type CarouselProps = {

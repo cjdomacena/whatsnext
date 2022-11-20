@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { BLUR_DATA } from "../../../lib/constants/config";
-import { getGenres } from "../../../lib/util";
-import Ratings from "../../Utils/Ratings";
-import { TrendingResult } from "../../../lib/types";
+import { BLUR_DATA } from "../../../../lib/constants/config";
+import { getGenres } from "../../../../lib/util";
+import Ratings from "../../../Utils/Ratings";
+import { TrendingResult } from "../../../../lib/types";
 type CarouselSlideProps = {
   data: TrendingResult<"all">;
 };

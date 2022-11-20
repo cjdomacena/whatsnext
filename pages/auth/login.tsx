@@ -8,8 +8,8 @@ import Link from "next/link";
 import router from "next/router";
 import React, { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import FormHeader from "../../components/forms/FormHeader";
-import InputField from "../../components/inputs/InputField";
+import FormHeader from "../../components/elements/forms/FormHeader";
+import InputField from "../../components/elements/inputs/InputField";
 import AuthLayout from "../../components/layouts/AuthLayout";
 import MetaHeader from "../../lib/seo/MetaHeader";
 

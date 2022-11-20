@@ -18,7 +18,7 @@ import {
   TabLayout,
   TabMenu,
   TabContent,
-} from "../../components/Tabs/DetailPage";
+} from "../../components/elements/radix-tab/DetailPage";
 
 export type DetailsProps = Intersect<"movie"> &
   Intersect<"tv"> & {

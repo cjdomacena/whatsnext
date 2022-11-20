@@ -2,7 +2,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
 import Link from "next/link";
 import React, { useState } from "react";
-import InputField from "../../components/inputs/InputField";
+import InputField from "../../components/elements/inputs/InputField";
 import AuthLayout from "../../components/layouts/AuthLayout";
 import MetaHeader from "../../lib/seo/MetaHeader";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -11,7 +11,7 @@ import {
   SignInWithPasswordCredentials,
 } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
-import FormHeader from "../../components/forms/FormHeader";
+import FormHeader from "../../components/elements/forms/FormHeader";
 
 const Register: NextPage = () => {
   const supabase = useSupabaseClient();

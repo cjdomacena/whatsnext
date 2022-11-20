@@ -1,6 +1,6 @@
 import { useGetTrending } from "../../lib/api/useGetTrending";
-import Carousel from "./Carousel";
-import DefaultLoader from "./Loader";
+import Carousel from "../elements/slider/Carousel";
+import DefaultLoader from "../elements/slider/Loader";
 
 const TrendingTV: React.FC = () => {
   const { data, isError, error, status } = useGetTrending({

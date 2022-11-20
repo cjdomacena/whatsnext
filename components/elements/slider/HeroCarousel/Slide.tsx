@@ -1,9 +1,9 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BLUR_DATA } from "../../../lib/constants/config";
-import { TrendingResult } from "../../../lib/types";
-import { parseMeta } from "../../../lib/util";
+import { BLUR_DATA } from "../../../../lib/constants/config";
+import { TrendingResult } from "../../../../lib/types";
+import { parseMeta } from "../../../../lib/util";
 
 type Props = {
   width: number;

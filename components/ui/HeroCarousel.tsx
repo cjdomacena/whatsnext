@@ -1,9 +1,9 @@
 import React from "react";
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
-import Slide from "./Slide";
-import { useGetTrending } from "../../../lib/api/useGetTrending";
-import Loader from "./../Loader";
+import { useGetTrending } from "../../lib/api/useGetTrending";
+import Slide from "../elements/slider/HeroCarousel/Slide";
+import Loader from "../elements/slider/Loader";
 
 const HeroSlider: React.FC = () => {
   const { data, isError, status, error } = useGetTrending({
