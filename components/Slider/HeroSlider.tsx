@@ -3,7 +3,7 @@ import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
 import Slide, { SlideLoading } from "./Slide";
 import { useGetTrending } from "../../lib/api/useGetTrending";
-import { ExtractedResult, MovieInterface, MovieSchema } from "../../lib/types";
+import { MovieSchema } from "../../lib/types";
 
 const HeroSlider: React.FC = () => {
   const { data, isError, status, error } = useGetTrending({
