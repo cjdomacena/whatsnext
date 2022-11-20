@@ -67,3 +67,14 @@ export const parseMeta = ({
   }
   return { title: "", date: null };
 };
+
+export const getDuration = (duration: number) => {
+  let minutes = duration;
+  let hours = 0;
+  while (minutes >= 60) {
+    minutes -= 60;
+    hours++;
+  }
+
+  return `${hours !== 0 ? hours + "h" : ""} ${minutes}m`;
+};

@@ -13,12 +13,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { getDetail } from "../../lib/api/getDetails";
 import { Intersect } from "../../lib/types";
-import { getYear, parseMeta } from "../../lib/util";
+import { getDuration, getYear, parseMeta } from "../../lib/util";
 import {
   TabLayout,
   TabMenu,
   TabContent,
-} from "../../components/elements/radix-tab/DetailPage";
+} from "../../components/elements/tabs/DetailPage";
 
 export type DetailsProps = Intersect<"movie"> &
   Intersect<"tv"> & {
@@ -146,7 +146,7 @@ const DetailPage = (
                         </p>
                       </div>
                     </div>
-                    <div className=" h-auto text-neutral-500">
+                    <div className=" h-auto text-neutral-500 space-y-4">
                       <div>
                         <h4 className="text-sm font-bold text-neutral-400">
                           Keywords
@@ -162,9 +162,20 @@ const DetailPage = (
                           ))}
                         </ul>
                       </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-neutral-400">
+                          Duration
+                        </h4>
+                        <p className="text-xs  text-neutral-500">
+                          {details.runtime
+                            ? getDuration(230)
+                            : getDuration(details.episode_run_time[0])}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </TabContent>
+                <TabContent value="cast" />
               </TabLayout>
             </MovieLayout>
           </>
