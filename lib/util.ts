@@ -1,3 +1,4 @@
+import { MEDIA_TYPE } from "./constants/enums";
 import { MOVIE_GENRES, TV_GENRES } from "./constants/genres";
 
 export const formatDate = (date: string) => {
@@ -24,7 +25,7 @@ export const getUserScoreTemp = (vote: number) => {
   }
 };
 
-export const getGenres = (ids: number[], type: "tv" | "movie") => {
+export const getGenres = (ids: number[], type: keyof typeof MEDIA_TYPE) => {
   const genres: { id: number; name: string }[] = [];
   const genreList = type === "tv" ? TV_GENRES : MOVIE_GENRES;
   ids.map((id) => {
@@ -36,4 +37,14 @@ export const getGenres = (ids: number[], type: "tv" | "movie") => {
   });
 
   return genres.sort((a, b) => a.name.length - b.name.length);
+};
+
+export const textColor = (vote: number) => {
+  if (vote < 5) {
+    return "text-orange-500";
+  } else if (vote >= 5 && vote < 7.5) {
+    return "text-yellow-500";
+  } else if (vote >= 7.5) {
+    return "text-green-500";
+  }
 };
