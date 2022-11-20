@@ -1,14 +1,13 @@
 import React from "react";
 import { useKeenSlider } from "keen-slider/react";
 import { TrendingResult } from "../../../lib/types";
-import { MEDIA_TYPE } from "../../../lib/constants/enums";
 import CarouselSlide from "./CarouselSlide";
 
-type CarouselProps<T extends keyof typeof MEDIA_TYPE> = {
-  data: TrendingResult<T>[];
+type CarouselProps = {
+  data: TrendingResult<"all">[];
 };
 
-const Carousel: React.FC<CarouselProps<"all">> = ({ data }) => {
+const Carousel: React.FC<CarouselProps> = ({ data }) => {
   const [sliderRef] = useKeenSlider<HTMLDivElement>({
     initial: 0,
     loop: false,
@@ -40,10 +39,10 @@ const Carousel: React.FC<CarouselProps<"all">> = ({ data }) => {
       <div className="my-4 relative w-full h-auto">
         <div
           ref={sliderRef}
-          className="keen-slider h-full grid w-full place-items-center min-w-[300px] pr-4 py-4 "
+          className="keen-slider h-full flex  w-full min-w-[300px] pr-4 py-4 "
         >
           {data
-            ? data.map((movie) => <CarouselSlide data={movie} key={movie.id} />)
+            ? data.map((res) => <CarouselSlide data={res} key={res.id} />)
             : null}
         </div>
       </div>

@@ -10,14 +10,9 @@ type CarouselSlideProps = {
 const CarouselSlide: React.FC<CarouselSlideProps> = ({ data }) => {
   const score = Math.ceil(data.vote_average) / 2;
   const genres = getGenres(data.genre_ids, data?.media_type);
-  const title =
-    data.media_type === "movie"
-      ? data.title
-      : data.media_type === "tv"
-      ? data.name
-      : null;
+  const title = data.media_type === "tv" ? data.name : data.title;
   return (
-    <Link href={`/${data.media_type}/${data.id}`}>
+    <Link href={`/${data.media_type ?? "movie"}/${data.id}`}>
       <div className="keen-slider__slide rounded bg-neutral-900/60 backdrop-blur group h-full">
         <div className="text-center">
           <h4 className="line-clamp-1 font-semibold"></h4>

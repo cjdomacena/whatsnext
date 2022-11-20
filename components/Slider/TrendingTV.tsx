@@ -16,7 +16,7 @@ const TrendingTV: React.FC = () => {
       return <DefaultLoader />;
     }
     case "success": {
-      return <Carousel data={data.results} type="tv" />;
+      return <Carousel data={data.results} />;
     }
   }
 };

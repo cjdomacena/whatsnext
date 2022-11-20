@@ -11,12 +11,13 @@ const PopularMovies: React.FC = () => {
   if (isError) {
     return <h1>{error.message}</h1>;
   }
+
   switch (status) {
     case "loading": {
       return <DefaultLoader />;
     }
     case "success": {
-      return <Carousel data={data.results} type="movie" />;
+      return <Carousel data={data.results} />;
     }
   }
 };

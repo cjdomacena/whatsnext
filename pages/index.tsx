@@ -1,7 +1,6 @@
-import HeroSlider from "../components/Slider/HeroSlider";
-import MetaHeader from "../lib/seo/MetaHeader";
 import PopularMovies from "../components/Slider/PopularMovies";
 import TrendingTV from "../components/Slider/TrendingTV";
+import MetaHeader from "../lib/seo/MetaHeader";
 
 export default function Home() {
   return (
@@ -17,18 +16,16 @@ export default function Home() {
           </h1>
         </div>
       </div>
-      <section>
-        <HeroSlider />
-      </section>
-      {/* TODO: Look for a way to make it dynamic */}
+      <section></section>
+
       <section className="mx-4 my-4 space-y-4 text-neutral-200 ">
         <div>
           <div className="mx-auto  p-4 rounded relative">
             <h3 className=" text-6xl uppercase -tracking-wider font-bold whitespace-wrap break-words shadow">
               Popular Movies
             </h3>
+            <PopularMovies />
           </div>
-          <PopularMovies />
         </div>
       </section>
       <section className="mx-4 my-4 space-y-4 text-neutral-200">
@@ -37,8 +34,8 @@ export default function Home() {
             <h3 className=" text-6xl uppercase font-bold whitespace-wrap break-words shadow -tracking-wider">
               Trending TV
             </h3>
+            <TrendingTV />
           </div>
-          <TrendingTV />
         </div>
       </section>
     </div>

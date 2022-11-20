@@ -4,7 +4,6 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import MetaHeader from "../../lib/seo/MetaHeader";
 import MovieLayout from "../../components/Layouts/MovieLayout";
-import { Intersect } from "../../lib/types/movies";
 import Image from "next/image";
 import * as Tabs from "@radix-ui/react-tabs";
 import {
@@ -14,12 +13,14 @@ import {
 } from "../../lib/types/credits";
 import Link from "next/link";
 import { getDetail } from "../../lib/api/getDetails";
+import { Intersect } from "../../lib/types";
+import { parseMeta } from "../../lib/util";
 
 enum DType {
   "tv",
   "movie",
 }
-type DetailsProps = Intersect<"movie"> &
+export type DetailsProps = Intersect<"movie"> &
   Intersect<"tv"> & {
     credits: { cast: CastCredit[]; crew: ProductionCredit[] };
     keywords: Keywords;
@@ -104,15 +105,17 @@ const DetailPage = (
     ? details.keywords.results
     : details?.keywords.keywords;
 
+  const { title, date } = parseMeta({ details: details, type: type });
+
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
         {details ? (
           <>
             <MetaHeader
-              title={`${
-                details?.name ?? details.title
-              } — WhatsNext: Platform for the lazy`}
+              title={`${title} (${
+                date ? date : "NA"
+              }) — WhatsNext: Platform for the lazy`}
               description="Your No. 1 source of movies"
             />
             <TitleHeader {...details} />
