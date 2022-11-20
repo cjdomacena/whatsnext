@@ -19,7 +19,6 @@ import {
   TabContent,
 } from "../../components/elements/tabs/DetailPage";
 import Ratings from "../../components/Utils/Ratings";
-import MovieLayout from "./../../components/layouts/MovieLayout";
 
 export type DetailsProps = Intersect<"movie"> &
   Intersect<"tv"> & {
@@ -121,7 +120,7 @@ const DetailPage = (
             />
             <TitleHeader details={details} title={title} />
 
-            <MovieLayout>
+            <div className="my-24 container mx-auto w-full px-6 relative">
               <TabLayout>
                 <TabMenu tabs={tabs} />
                 <TabContent value="overview">
@@ -186,7 +185,7 @@ const DetailPage = (
                 </TabContent>
                 <TabContent value="cast" />
               </TabLayout>
-            </MovieLayout>
+            </div>
           </>
         ) : null}
       </Suspense>
