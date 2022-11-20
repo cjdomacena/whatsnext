@@ -13,12 +13,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { getDetail } from "../../lib/api/getDetails";
 import { Intersect } from "../../lib/types";
-import { getDuration, getYear, parseMeta } from "../../lib/util";
+import { getDuration, getRating, getYear, parseMeta } from "../../lib/util";
 import {
   TabLayout,
   TabMenu,
   TabContent,
 } from "../../components/elements/tabs/DetailPage";
+import Ratings from "../../components/Utils/Ratings";
 
 export type DetailsProps = Intersect<"movie"> &
   Intersect<"tv"> & {
@@ -106,7 +107,7 @@ const DetailPage = (
     : details?.keywords.keywords;
 
   const { title, date } = parseMeta({ details: details, type: type });
-
+  const score = getRating(details?.vote_average);
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
@@ -171,6 +172,14 @@ const DetailPage = (
                             ? getDuration(230)
                             : getDuration(details.episode_run_time[0])}
                         </p>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-neutral-400">
+                          Rating
+                        </h4>
+                        <div className="pt-1">
+                          <Ratings score={String(score).split(".")} />
+                        </div>
                       </div>
                     </div>
                   </div>

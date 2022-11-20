@@ -78,3 +78,7 @@ export const getDuration = (duration: number) => {
 
   return `${hours !== 0 ? hours + "h" : ""} ${minutes}m`;
 };
+
+export const getRating = (score: number | null | undefined) => {
+  return score ? Math.ceil(score / 2) : 0;
+};

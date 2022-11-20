@@ -1,14 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { BLUR_DATA } from "../../../../lib/constants/config";
-import { getGenres } from "../../../../lib/util";
+import { getGenres, getRating } from "../../../../lib/util";
 import Ratings from "../../../Utils/Ratings";
 import { TrendingResult } from "../../../../lib/types";
 type CarouselSlideProps = {
   data: TrendingResult<"all">;
 };
 const CarouselSlide: React.FC<CarouselSlideProps> = ({ data }) => {
-  const score = Math.ceil(data.vote_average) / 2;
+  const score = getRating(data.vote_average);
   const genres = getGenres(data.genre_ids, data?.media_type);
   const title = data.media_type === "tv" ? data.name : data.title;
   return (
