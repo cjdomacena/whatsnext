@@ -2,7 +2,7 @@ import { IoSearchOutline, IoSunny } from "react-icons/io5";
 import NavExpanded from "./NavExpanded";
 import Link from "next/link";
 import UserNav from "./UserNav";
-import Search from "../Inputs/Search";
+import Search from "../inputs/Search";
 
 const Navbar = () => {
   return (
