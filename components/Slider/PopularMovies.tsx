@@ -1,6 +1,6 @@
 import { useGetMovies } from "../../lib/api/useGetMovies";
 import Carousel from "./Carousel";
-import DefaultLoader from "./DefaultLoader";
+import Loader from "./Loader";
 
 const PopularMovies: React.FC = () => {
   const { data, isError, error, status } = useGetMovies({
@@ -14,7 +14,7 @@ const PopularMovies: React.FC = () => {
 
   switch (status) {
     case "loading": {
-      return <DefaultLoader />;
+      return <Loader />;
     }
     case "success": {
       return <Carousel data={data.results} />;

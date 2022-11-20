@@ -1,6 +1,7 @@
 import { DetailsProps } from "../pages/[type]/[id]";
 import { MEDIA_TYPE } from "./constants/enums";
 import { MOVIE_GENRES, TV_GENRES } from "./constants/genres";
+import { TrendingResult } from "./types";
 
 export const formatDate = (date: string) => {
   return new Intl.DateTimeFormat("en-US", {
@@ -54,9 +55,9 @@ export const parseMeta = ({
   details,
   type,
 }: {
-  details?: DetailsProps;
+  details?: DetailsProps | TrendingResult<"all">;
   type: string | string[] | undefined;
-}): { title: string | null; date: string | null } => {
+}): { title: string; date: string | null } => {
   if (details && typeof type === "string") {
     if (type === "movie") {
       return { title: details.title, date: details.release_date ?? null };
@@ -64,5 +65,5 @@ export const parseMeta = ({
       return { title: details.name, date: details.first_air_date ?? null };
     }
   }
-  return { title: null, date: null };
+  return { title: "", date: null };
 };

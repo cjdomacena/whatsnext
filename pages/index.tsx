@@ -1,3 +1,4 @@
+import HeroSlider from "../components/Slider/HeroCarousel/";
 import PopularMovies from "../components/Slider/PopularMovies";
 import TrendingTV from "../components/Slider/TrendingTV";
 import MetaHeader from "../lib/seo/MetaHeader";
@@ -16,7 +17,9 @@ export default function Home() {
           </h1>
         </div>
       </div>
-      <section></section>
+      <section>
+        <HeroSlider />
+      </section>
 
       <section className="mx-4 my-4 space-y-4 text-neutral-200 ">
         <div>

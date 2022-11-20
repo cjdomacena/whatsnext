@@ -1,4 +1,4 @@
-const DefaultLoader: React.FC = () => {
+const Loader: React.FC = () => {
   return (
     <div className="overflow-x-hidden">
       <div className="my-4 relative w-full grid grid-cols-[repeat(auto-fill,minmax(310px,1fr))] grid-rows-1 h-[450px] gap-2">
@@ -13,4 +13,4 @@ const DefaultLoader: React.FC = () => {
   );
 };
 
-export default DefaultLoader;
+export default Loader;
