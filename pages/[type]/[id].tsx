@@ -3,7 +3,6 @@ import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import MetaHeader from "../../lib/seo/MetaHeader";
-import MovieLayout from "../../components/layouts/MovieLayout";
 import {
   CastCredit,
   Keywords,
@@ -20,6 +19,7 @@ import {
   TabContent,
 } from "../../components/elements/tabs/DetailPage";
 import Ratings from "../../components/Utils/Ratings";
+import MovieLayout from "../../components/layouts/MovieLayout";
 
 export type DetailsProps = Intersect<"movie"> &
   Intersect<"tv"> & {
