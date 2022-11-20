@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { MovieSchema } from "../types";
+import { TrendingQueryResult } from "../types";
 
 export enum MovieQueryType {
   "top_rated",
@@ -21,7 +21,7 @@ export const useGetMovies = ({
   key: string[];
   type?: keyof typeof MovieQueryType;
   page?: number;
-}): UseQueryResult<MovieSchema<"movie">, Error> => {
+}): UseQueryResult<TrendingQueryResult<"all">, Error> => {
   return useQuery(
     [key],
     async () => {

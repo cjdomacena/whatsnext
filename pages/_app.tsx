@@ -6,7 +6,7 @@ import "@fontsource/montserrat/700.css";
 import "@fontsource/montserrat/800.css";
 import "@fontsource/montserrat/900.css";
 import type { AppProps } from "next/app";
-import Navbar from "../components/Header/Navbar";
+import Navbar from "../components/ui/Navbar";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";

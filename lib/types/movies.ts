@@ -1,4 +1,10 @@
-import { TVDetails } from "./tv";
+import {
+  BelongsToCollection,
+  Genre,
+  ProductionCompany,
+  ProductionCountry,
+  SpokenLanguage,
+} from "./common";
 
 export type MovieDetails = {
   adult: boolean;
@@ -14,11 +20,11 @@ export type MovieDetails = {
   overview: string;
   popularity: number;
   poster_path: string;
-  production_companies: ProductionCompany[];
-  production_countries: ProductionCountry[];
-  release_date: Date;
-  revenue: number;
-  runtime: number;
+  production_companies: ProductionCompany[] | null;
+  production_countries: ProductionCountry[] | null;
+  release_date: string;
+  revenue: number | null;
+  runtime: number | null;
   spoken_languages: SpokenLanguage[];
   status: string;
   tagline: string;
@@ -27,39 +33,3 @@ export type MovieDetails = {
   vote_average: number;
   vote_count: number;
 };
-
-export interface Genre {
-  id: number;
-  name: string;
-}
-
-export interface ProductionCompany {
-  id: number;
-  logo_path: null | string;
-  name: string;
-  origin_country: string;
-}
-
-export interface ProductionCountry {
-  iso_3166_1: string;
-  name: string;
-}
-
-export interface SpokenLanguage {
-  english_name: string;
-  iso_639_1: string;
-  name: string;
-}
-
-export interface BelongsToCollection {
-  id: number;
-  name: string;
-  poster_path: string;
-  backdrop_path: string;
-}
-
-export type Intersect<T extends "tv" | "movie"> = T extends "tv"
-  ? TVDetails
-  : T extends "movie"
-  ? MovieDetails
-  : never;

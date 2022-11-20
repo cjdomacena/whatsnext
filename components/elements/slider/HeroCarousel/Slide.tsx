@@ -1,12 +1,15 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BLUR_DATA } from "../../lib/constants/config";
+import { BLUR_DATA } from "../../../../lib/constants/config";
+import { TrendingResult } from "../../../../lib/types";
+import { parseMeta } from "../../../../lib/util";
 
 type Props = {
   width: number;
   path: string;
-  result: any; // I give up
+  result: TrendingResult<"all">;
+  type: "tv" | "movie";
 };
 
 const formatDate = (date: string) => {
@@ -17,14 +20,8 @@ const formatDate = (date: string) => {
   }).format(new Date(date));
 };
 
-const Slide: React.FC<Props> = ({ width, path, result }) => {
-  const getUrlPath = (title: string, id: string) => {
-    const path = `${title}-${id}`;
-    const t = path.split(/[.:-]/);
-    return `${String(t[0].split(" ").join("-").toLowerCase())}-${
-      t[t.length - 1]
-    }`;
-  };
+const Slide: React.FC<Props> = ({ width, path, result, type }) => {
+  const { title, date } = parseMeta({ details: result, type: type });
 
   return (
     <div
@@ -45,11 +42,8 @@ const Slide: React.FC<Props> = ({ width, path, result }) => {
         blurDataURL={BLUR_DATA}
       />
       <div className="absolute bottom-6 left-8 z-40 text-white w-[400px] space-y-2">
-        <h2
-          className="text-2xl font-black gap-1 line-clamp-1"
-          title={result.name ?? result.title}
-        >
-          {result.title ?? result.name}
+        <h2 className="text-2xl font-black gap-1 line-clamp-1" title={title}>
+          {title}
         </h2>
         <p className="text-xs uppercase">{result.media_type}</p>
 
@@ -62,12 +56,6 @@ const Slide: React.FC<Props> = ({ width, path, result }) => {
       </div>
       <div className="w-full h-full bg-black z-10 absolute top-0 left-0 opacity-50 group-hover:opacity-10 transition-opacity rounded"></div>
     </div>
-  );
-};
-
-export const SlideLoading: React.FC = () => {
-  return (
-    <div className="w-[500px] h-[300px] bg-neutral-800 rounded animate-pulse keen-slider__slide flex-grow"></div>
   );
 };
 

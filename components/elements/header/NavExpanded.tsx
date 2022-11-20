@@ -1,5 +1,5 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import { MOVIE_GENRES, TV_GENRES } from "../../lib/constants/genres";
+import { MOVIE_GENRES, TV_GENRES } from "../../../lib/constants/genres";
 
 import NavLink from "./NavLink";
 

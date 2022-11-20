@@ -3,23 +3,25 @@ import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import MetaHeader from "../../lib/seo/MetaHeader";
-import MovieLayout from "../../components/Layouts/MovieLayout";
-import { Intersect } from "../../lib/types/movies";
-import Image from "next/image";
-import * as Tabs from "@radix-ui/react-tabs";
 import {
   CastCredit,
   Keywords,
   ProductionCredit,
 } from "../../lib/types/credits";
+import Image from "next/image";
 import Link from "next/link";
 import { getDetail } from "../../lib/api/getDetails";
+import { Intersect } from "../../lib/types";
+import { getDuration, getRating, getYear, parseMeta } from "../../lib/util";
+import {
+  TabLayout,
+  TabMenu,
+  TabContent,
+} from "../../components/elements/tabs/DetailPage";
+import Ratings from "../../components/Utils/Ratings";
+import MovieLayout from "./../../components/layouts/MovieLayout";
 
-enum DType {
-  "tv",
-  "movie",
-}
-type DetailsProps = Intersect<"movie"> &
+export type DetailsProps = Intersect<"movie"> &
   Intersect<"tv"> & {
     credits: { cast: CastCredit[]; crew: ProductionCredit[] };
     keywords: Keywords;
@@ -104,45 +106,28 @@ const DetailPage = (
     ? details.keywords.results
     : details?.keywords.keywords;
 
+  const { title, date } = parseMeta({ details: details, type: type });
+  const score = getRating(details?.vote_average);
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
         {details ? (
           <>
             <MetaHeader
-              title={`${
-                details?.name ?? details.title
-              } — WhatsNext: Platform for the lazy`}
+              title={`${title} (${
+                date ? getYear(date) : "NA"
+              }) — WhatsNext: Platform for the lazy`}
               description="Your No. 1 source of movies"
             />
-            <TitleHeader {...details} />
+            <TitleHeader details={details} title={title} />
 
             <MovieLayout>
-              <Tabs.Root
-                defaultValue="overview"
-                orientation="horizontal"
-                className="space-y-2"
-              >
-                <Tabs.List className="fixed bottom-8 left-0 grid place-items-center w-full grid-cols-1 z-50">
-                  <div className=" bg-neutral-900/60 backdrop-blur  py-1 px-1 ring ring-neutral-900 w-auto gap-1 rounded-full flex justify-between items-center drop-shadow-[0_2px_10px_rgba(255,255,255,0.09)]">
-                    {tabs.map((tab, index) =>
-                      tab.isShowing ? (
-                        <Trigger value={tab.value} key={tab.value + `${index}`}>
-                          {tab.withPing ? (
-                            <div className="rounded-full top-2 right-2 absolute bg-green-500/20 ">
-                              <p className="p-[0.2rem] bg-green-500 rounded-full animate-ping"></p>
-                            </div>
-                          ) : null}
-                          {tab.name}
-                        </Trigger>
-                      ) : null
-                    )}
-                  </div>
-                </Tabs.List>
-                <Tabs.Content value="overview">
-                  <div className="min-h-[450px] gap-12 flex  2xl:flex-nowrap xl:flex-nowrap lg:flex-nowrap md:flex-nowrap flex-wrap">
-                    <div className=" w-fit ">
-                      <div className="w-[300px] h-[450px] bg-neutral-900 relative ">
+              <TabLayout>
+                <TabMenu tabs={tabs} />
+                <TabContent value="overview">
+                  <div className="min-h-[450px] gap-12 flex  2xl:flex-nowrap xl:flex-nowrap lg:flex-nowrap md:flex-nowrap flex-wrap ">
+                    <div className=" w-auto self-center mx-auto">
+                      <div className="w-[300px] h-[450px] bg-neutral-900 relative">
                         <Image
                           src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2${details.poster_path}`}
                           alt=""
@@ -156,24 +141,17 @@ const DetailPage = (
                       <div>
                         <h2 className="text-4xl font-black 2xl:leading-loose xl:leading-loose lg:leading-loose leading-relaxed break-words">
                           Overview
-                          {/* {details.name ?? details.title} */}
                         </h2>
                         <p className="text-lg font-extralight leading-loose text-neutral-300">
                           {details.overview}
                         </p>
                       </div>
                     </div>
-                    <div className=" h-auto text-neutral-500">
-                      {/* <div>
-                        <h4 className="text-sm font-bold text-neutral-400">
-                          Production
-                        </h4>
-                      </div> */}
+                    <div className=" h-auto text-neutral-500 space-y-4">
                       <div>
                         <h4 className="text-sm font-bold text-neutral-400">
                           Keywords
                         </h4>
-
                         <ul className=" mt-2 flex flex-wrap gap-2">
                           {keywords?.map((keyword) => (
                             <li
@@ -185,17 +163,29 @@ const DetailPage = (
                           ))}
                         </ul>
                       </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-neutral-400">
+                          Duration
+                        </h4>
+                        <p className="text-xs  text-neutral-500">
+                          {details.runtime
+                            ? getDuration(230)
+                            : getDuration(details.episode_run_time[0])}
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-neutral-400">
+                          Rating
+                        </h4>
+                        <div className="pt-1">
+                          <Ratings score={String(score).split(".")} />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </Tabs.Content>
-                <Tabs.Content value="cast">
-                  <div className=" min-h-[400px]">
-                    <h2 className="text-4xl font-black 2xl:leading-loose xl:leading-loose lg:leading-loose leading-relaxed break-words">
-                      Current Season
-                    </h2>
-                  </div>
-                </Tabs.Content>
-              </Tabs.Root>
+                </TabContent>
+                <TabContent value="cast" />
+              </TabLayout>
             </MovieLayout>
           </>
         ) : null}
@@ -204,20 +194,13 @@ const DetailPage = (
   );
 };
 
-const Trigger: React.FC<React.PropsWithChildren<Tabs.TabsTriggerProps>> = (
-  props
-) => {
-  return (
-    <Tabs.Trigger
-      className="data-[state='active']:bg-neutral-800 px-4 py-2 rounded-full text-xs transition-colors"
-      {...props}
-    >
-      {props.children}
-    </Tabs.Trigger>
-  );
-};
-
-const TitleHeader = <T extends DetailsProps>(details: T) => {
+const TitleHeader = ({
+  details,
+  title,
+}: {
+  details: DetailsProps;
+  title: string;
+}) => {
   return (
     <div
       className={`w-full min-h-[600px] bg-cover bg-no-repeat bg-center  relative z-10 grid place-items-center`}
@@ -230,7 +213,7 @@ const TitleHeader = <T extends DetailsProps>(details: T) => {
         <div className="w-fit mx-auto rounded space-y-8 text-center">
           <div>
             <h1 className="2xl:text-8xl xl:text-8xl lg:text-8xl text-4xl font-black">
-              {details.name ?? details.title}
+              {title}
             </h1>
             <p className="2xl:text-2xl xl:text-2xl lg:text-2xl text-lg">
               {details?.tagline ?? null}

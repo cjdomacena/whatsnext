@@ -1,9 +1,5 @@
 import * as Popover from "@radix-ui/react-popover";
-import {
-  useSession,
-  useSupabaseClient,
-  useUser,
-} from "@supabase/auth-helpers-react";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import { PropsWithChildren } from "react";
 import {
@@ -12,7 +8,7 @@ import {
   IoPersonOutline,
   IoSettings,
 } from "react-icons/io5";
-import Button from "../../Buttons";
+import Button from "../../buttons";
 import UserAvatar from "./UserAvatar";
 
 const UserNav = () => {
