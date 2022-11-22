@@ -1,8 +1,5 @@
-"use client";
-
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import {
-  AuthApiError,
   AuthError,
   SignInWithPasswordCredentials,
 } from "@supabase/supabase-js";
@@ -11,9 +8,9 @@ import Link from "next/link";
 import router from "next/router";
 import React, { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import FormHeader from "../../components/Forms/FormHeader";
-import InputField from "../../components/Inputs/InputField";
-import AuthLayout from "../../components/Layouts/AuthLayout";
+import FormHeader from "../../components/elements/forms/FormHeader";
+import InputField from "../../components/elements/inputs/InputField";
+import AuthLayout from "../../components/layouts/AuthLayout";
 import MetaHeader from "../../lib/seo/MetaHeader";
 
 const Login: NextPage = () => {

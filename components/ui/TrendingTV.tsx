@@ -1,13 +1,12 @@
-import { useGetMovies } from "../../lib/api/useGetMovies";
 import { useGetTrending } from "../../lib/api/useGetTrending";
-import Carousel from "./Carousel";
-import DefaultLoader from "./DefaultLoader";
+import Carousel from "../elements/slider/Carousel";
+import DefaultLoader from "../elements/slider/Loader";
 
-const TrendingMovies: React.FC = () => {
+const TrendingTV: React.FC = () => {
   const { data, isError, error, status } = useGetTrending({
-    key: ["trending", "movie", "week"],
+    key: ["trending", "tv", "week"],
     time_window: "week",
-    media_type: "movie",
+    media_type: "tv",
   });
   if (isError) {
     return <h1>{error.message}</h1>;
@@ -22,4 +21,4 @@ const TrendingMovies: React.FC = () => {
   }
 };
 
-export default TrendingMovies;
+export default TrendingTV;

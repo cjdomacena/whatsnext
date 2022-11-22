@@ -1,8 +1,9 @@
 import React from "react";
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
-import Slide, { SlideLoading } from "./Slide";
 import { useGetTrending } from "../../lib/api/useGetTrending";
+import Slide from "../elements/slider/HeroCarousel/Slide";
+import Loader from "../elements/slider/Loader";
 
 const HeroSlider: React.FC = () => {
   const { data, isError, status, error } = useGetTrending({
@@ -10,6 +11,7 @@ const HeroSlider: React.FC = () => {
     time_window: "day",
     media_type: "all",
   });
+
   const [ref] = useKeenSlider<HTMLDivElement>({
     initial: 0,
     loop: false,
@@ -34,53 +36,31 @@ const HeroSlider: React.FC = () => {
   if (isError) {
     return <h1>{}</h1>;
   }
-
-  if (status === "success") {
-    return (
-      <div className="overflow-x-hidden">
-        <div className="my-4 relative  px-2">
-          <div ref={ref} className="keen-slider h-auto gap-1 ">
-            {data && data.results
-              ? data.results.map((movie, index: number) =>
-                  index < 6 ? (
+  switch (status) {
+    case "loading": {
+      return <Loader />;
+    }
+    case "success": {
+      return (
+        <div className="overflow-x-hidden">
+          <div className="my-4 relative  px-2">
+            <div ref={ref} className="keen-slider h-auto gap-1 ">
+              {data && data.results
+                ? data.results.map((movie) => (
                     <Slide
                       width={1280}
                       path={movie.backdrop_path ?? ""}
                       key={movie.id}
                       result={movie}
+                      type={movie.media_type}
                     />
-                  ) : null
-                )
-              : null}
+                  ))
+                : null}
+            </div>
           </div>
         </div>
-      </div>
-    );
-  } else if (status === "loading") {
-    return (
-      <div className="overflow-x-hidden">
-        <div className="my-8 px-2 relative rounded">
-          <div className="flex gap-4">
-            <SlideLoading />
-            <SlideLoading />
-            <SlideLoading />
-          </div>
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className=" overflow-x-hidden">
-        <div className="my-8 px-2 relative rounded">
-          <div className="flex gap-4">
-            <SlideLoading />
-            <SlideLoading />
-            <SlideLoading />
-          </div>
-        </div>
-      </div>
-    );
+      );
+    }
   }
 };
-
 export default HeroSlider;

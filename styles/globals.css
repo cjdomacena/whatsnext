@@ -1,11 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+html {
+  background-color: #0c0d0c;
+}
 body {
-  background-color: #000;
+  background-color: #0c0d0c;
+
   @apply text-neutral-100;
   font-family: "Montserrat", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* https://www.radix-ui.com/docs/primitives/components/navigation-menu */
@@ -120,3 +124,5 @@ body {
     transform: translateX(-200px);
   }
 }
+
+/* tesss */

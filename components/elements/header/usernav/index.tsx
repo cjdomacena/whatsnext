@@ -1,26 +1,37 @@
 import * as Popover from "@radix-ui/react-popover";
-import {
-  useSession,
-  useSupabaseClient,
-  useUser,
-} from "@supabase/auth-helpers-react";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
 import { PropsWithChildren } from "react";
-import { IoExit, IoPersonOutline, IoSettings } from "react-icons/io5";
-import Button from "../../Buttons";
+import {
+  IoCaretDown,
+  IoExit,
+  IoPersonOutline,
+  IoSettings,
+} from "react-icons/io5";
+import Button from "../../buttons";
 import UserAvatar from "./UserAvatar";
 
 const UserNav = () => {
   const session = useSession();
   const supabase = useSupabaseClient();
-
+  const router = useRouter();
   return session ? (
     <Popover.Root>
-      <Popover.Trigger>
-        <UserAvatar />
+      <Popover.Trigger className="flex text-xs gap-2 items-center">
+        <UserAvatar user={session.user} />
+        <div>
+          <div className="flex items-center gap-2">
+            <h4>{session.user.user_metadata?.full_name}</h4>
+            <IoCaretDown />
+          </div>
+          <div className="text-xs rounded-full text-amber-500 w-fit font-semibold">
+            Free Tier
+          </div>
+        </div>
       </Popover.Trigger>
       {/* <Popover.Anchor /> */}
-      <Popover.Portal className="relative">
-        <Popover.Content className="absolute -right-4 top-0 bg-main rounded w-52 NavigationMenuContent text-sm  ring-1 ring-amber-900/10 shadow-lg space-y-1 py-1 text-neutral-300 ">
+      <Popover.Portal>
+        <Popover.Content className="absolute -right-24 top-4 bg-main rounded w-52 NavigationMenuContent text-sm  ring-1 ring-amber-900/10 shadow-lg space-y-1 py-1 text-neutral-300 ">
           <MenuList>
             <MenuItemHeader>
               <IoPersonOutline />
@@ -45,6 +56,7 @@ const UserNav = () => {
               if (error) {
                 throw error;
               }
+              router.push("/");
             }}
           >
             <IoExit className="" />

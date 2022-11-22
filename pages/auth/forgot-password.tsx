@@ -1,7 +1,7 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
 import Link from "next/link";
-import AuthLayout from "../../components/Layouts/AuthLayout";
+import AuthLayout from "../../components/layouts/AuthLayout";
 import MetaHeader from "../../lib/seo/MetaHeader";
 
 const ForgotPassword: NextPage = () => {

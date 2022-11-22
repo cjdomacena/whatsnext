@@ -1,5 +1,5 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import { MOVIE_GENRES, TV_GENRES } from "../../lib/constants/genres";
+import { MOVIE_GENRES, TV_GENRES } from "../../../lib/constants/genres";
 
 import NavLink from "./NavLink";
 
@@ -16,7 +16,7 @@ const NavExpanded = () => {
           </NavigationMenu.Trigger>
           <NavigationMenu.Content
             className="NavigationMenuContent 
-          absolute top-12 left-0 bg-main w-auto h-auto rounded shadow-xl shadow-neutral-900 flex gap-4"
+          absolute top-12 left-0 bg-neutral-900 w-auto h-auto rounded flex gap-4"
           >
             <div className="p-4 relative">
               <ul className="text-xs text-neutral-300 font-medium whitespace-nowrap grid grid-flow-col grid-rows-4">
@@ -41,7 +41,7 @@ const NavExpanded = () => {
           </NavigationMenu.Trigger>
           <NavigationMenu.Content
             className="NavigationMenuContent 
-          absolute top-12 left-0 bg-main w-auto h-auto rounded shadow-xl shadow-neutral-900 flex gap-4"
+          absolute top-12 left-0 bg-neutral-900 w-auto h-auto rounded flex gap-4"
           >
             <div className="p-4 relative">
               <ul className="text-xs text-neutral-300 font-medium whitespace-nowrap grid grid-flow-col grid-rows-4">
